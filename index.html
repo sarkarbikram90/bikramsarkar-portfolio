@@ -25,6 +25,7 @@ html[data-theme="dark"]{
 }
 
 *{box-sizing:border-box}
+
 body{
   margin:0;
   font-family:Inter,sans-serif;
@@ -41,11 +42,13 @@ body{
 
 h1{font-size:48px;line-height:1.1;margin:0}
 h2{margin-top:70px;font-size:28px}
-h3{margin:10px 0}
+h3{margin:0}
 
-p{color:var(--muted)}
+p{color:var(--muted);margin:0}
+
 a{color:var(--accent);text-decoration:none}
 
+/* NAV */
 nav{
   display:flex;
   justify-content:space-between;
@@ -58,8 +61,10 @@ nav{
   background:none;
   padding:6px 12px;
   border-radius:6px;
+  cursor:pointer;
 }
 
+/* HERO */
 .hero{
   margin-bottom:60px;
 }
@@ -81,25 +86,36 @@ nav{
 /* PROJECTS */
 .project{
   border:1px solid var(--border);
-  padding:20px;
+  padding:22px;
   border-radius:10px;
   margin-top:20px;
   transition:.2s;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
 }
+
 .project:hover{
   border-color:var(--accent);
   transform:translateY(-3px);
 }
 
+.project a{
+  margin-top:8px;
+  font-weight:600;
+  display:inline-block;
+}
+
 /* TAGS */
 .tags{
-  margin-top:10px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
 }
+
 .tag{
-  display:inline-block;
   font-size:12px;
   padding:4px 8px;
-  margin:4px 4px 0 0;
   border:1px solid var(--border);
   border-radius:6px;
 }
@@ -161,33 +177,33 @@ Currently transitioning from IT operations leadership → product engineering �
 <h2>About</h2>
 
 <p>
-Started in customer support. Moved into IT operations. Now building systems.
-That journey gave me a rare advantage — I understand how systems break at every layer.
+Started in customer support → moved into IT operations → now building systems.
+That journey gives me a rare advantage — I understand failure across every layer.
 </p>
 
 <p>
 I focus on observability, infrastructure reliability, and AI-assisted operations.
-The goal is simple: eliminate manual toil and make systems self-aware.
+Goal: eliminate manual toil and make systems self-aware.
 </p>
 
 <p>
-Long-term: building products that operate at scale and solve real-world infrastructure problems.
+Long-term: build products that operate at scale and solve real-world infrastructure problems.
 </p>
 </section>
 
-<!-- CURRENT ROLE -->
+<!-- CURRENT WORK -->
 <section class="reveal">
 <h2>Current Work</h2>
 
 <p><strong>Technical Lead — Infrastructure & Monitoring</strong></p>
 
 <p>
-Leading global monitoring operations for enterprise systems. Driving incident response, 
-observability strategy, and reliability improvements across AWS, Azure, and GCP.
+Leading global monitoring operations across AWS, Azure, and GCP. Driving incident response,
+observability strategy, and system reliability improvements.
 </p>
 
 <p>
-Impact: Reduced MTTR, improved system visibility, and streamlined operations workflows.
+Impact: reduced MTTR, improved visibility, and streamlined operations workflows.
 </p>
 </section>
 
@@ -199,7 +215,7 @@ Impact: Reduced MTTR, improved system visibility, and streamlined operations wor
 <h3>Obsygnal</h3>
 <p>
 Unified observability platform combining metrics, logs, traces, and system signals into one layer.
-Designed to give engineers full system awareness.
+Designed for full system awareness.
 </p>
 
 <div class="tags">
@@ -213,16 +229,15 @@ Designed to give engineers full system awareness.
 </div>
 
 <div class="project">
-<a href="https://secondgradient.com" target="_blank">Explore →</a>
-</div>
+<h3>SecondGradient</h3>
+
 <p>
 A thinking system for engineers and builders — focused on second-order effects, 
 decision-making, and long-term system behavior.
 </p>
 
 <p>
-Explores how actions evolve over time in complex systems — combining engineering, 
-AI, and strategic thinking.
+Explores how actions evolve in complex systems by combining engineering, AI, and strategic reasoning.
 </p>
 
 <div class="tags">
@@ -233,6 +248,8 @@ AI, and strategic thinking.
 <span class="tag">AI Reasoning</span>
 <span class="tag">Decision Models</span>
 </div>
+
+<a href="https://secondgradient.com" target="_blank">Explore →</a>
 </div>
 
 <div class="project">
@@ -283,7 +300,7 @@ Go · Python · Rust · Terraform · Prometheus · Grafana · AWS · Azure · GC
 <h2>Contact</h2>
 
 <p>
-If you're building something in infrastructure, observability, or AI systems — let's collaborate.
+If you're building in infrastructure, observability, or AI systems — let's collaborate.
 </p>
 
 <p>
