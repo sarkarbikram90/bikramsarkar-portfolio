@@ -59,7 +59,8 @@ html {
 }
 
 body {
-  background: var(--bg);
+  min-height: 100vh;
+  background: radial-gradient(circle at top left, rgba(88, 166, 255, 0.12), transparent 18%), radial-gradient(circle at bottom right, rgba(0, 102, 204, 0.1), transparent 20%), var(--bg);
   color: var(--text-primary);
   font-family: var(--font-sans);
   line-height: 1.6;
@@ -92,6 +93,7 @@ nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 }
 
 .nav-logo {
@@ -122,6 +124,42 @@ nav {
 
 .nav-links a:hover {
   color: var(--accent);
+}
+
+.mobile-menu-toggle {
+  display: none;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-secondary);
+  padding: 8px 10px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s;
+}
+
+.mobile-menu-toggle:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+nav.open .nav-links {
+  display: flex;
+  position: absolute;
+  top: 100%;
+  right: 40px;
+  width: min(320px, calc(100vw - 48px));
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: 18px 20px;
+  margin-top: 12px;
+}
+
+nav.open .nav-links a {
+  padding: 10px 0;
 }
 
 .theme-toggle {
@@ -202,7 +240,51 @@ nav {
   color: var(--text-secondary);
   max-width: 600px;
   line-height: 1.7;
+  margin-bottom: 32px;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
   margin-bottom: 40px;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 999px;
+  padding: 14px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 0.2s, background 0.2s, color 0.2s, border 0.2s;
+}
+
+.button:hover {
+  transform: translateY(-1px);
+}
+
+.button-primary {
+  background: var(--accent);
+  color: #ffffff;
+  border: 1px solid transparent;
+}
+
+.button-primary:hover {
+  background: var(--accent-hover);
+}
+
+.button-secondary {
+  background: var(--surface-alt);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+}
+
+.button-secondary:hover {
+  border-color: var(--accent);
 }
 
 .hero-stats {
@@ -943,6 +1025,10 @@ footer a:hover {
     display: none;
   }
 
+  nav.open .nav-links {
+    display: flex;
+  }
+
   section {
     padding: 60px 24px;
   }
@@ -1023,15 +1109,18 @@ footer a:hover {
       <li><a href="#skills">Skills</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
+    <button id="mobile-toggle" class="mobile-menu-toggle" aria-expanded="false" aria-label="Open navigation menu">☰</button>
     <div style="display: flex; align-items: center; gap: 16px;">
       <div class="nav-status">
         <div class="status-dot"></div>
         <span>Available</span>
       </div>
-      <button id="theme-toggle" class="theme-toggle">🌙 Dark</button>
+      <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">🌙 Dark</button>
     </div>
   </nav>
 </header>
+
+<main>
 
 <!-- ═══════════════════════════════════════════════════════════ -->
 <!-- HERO -->
@@ -1045,7 +1134,14 @@ footer a:hover {
   <p class="hero-subtitle">
     Infrastructure Engineering · Observability · AI/ML Systems · SRE. I help organizations scale reliable infrastructure and reduce operational toil through thoughtful design and automation.
   </p>
-  
+  <div class="hero-actions">
+    <a href="mailto:sarkarbikram90@email.com" class="button button-primary">
+      Let's talk
+    </a>
+    <a href="#contact" class="button button-secondary">
+      Contact me
+    </a>
+  </div>
   <div class="hero-stats">
     <div class="stat">
       <div class="stat-value">13<span style="font-size: 0.6em;">+</span></div>
@@ -1599,6 +1695,7 @@ footer a:hover {
     </div>
   </div>
 </section>
+</main>
 
 <!-- ═══════════════════════════════════════════════════════════ -->
 <!-- FOOTER -->
@@ -1620,12 +1717,22 @@ footer a:hover {
 // ═══════════════════════════════════════════════════════════
 
 const themeToggle = document.getElementById('theme-toggle');
+const mobileToggle = document.getElementById('mobile-toggle');
 const html = document.documentElement;
+const navElement = document.querySelector('nav');
 
 // Load saved theme from localStorage
 const savedTheme = localStorage.getItem('theme') || 'light';
 html.setAttribute('data-theme', savedTheme);
 updateThemeButton(savedTheme);
+
+if (mobileToggle) {
+  mobileToggle.addEventListener('click', () => {
+    const expanded = mobileToggle.getAttribute('aria-expanded') === 'true';
+    mobileToggle.setAttribute('aria-expanded', String(!expanded));
+    navElement.classList.toggle('open');
+  });
+}
 
 themeToggle.addEventListener('click', () => {
   const currentTheme = html.getAttribute('data-theme');
@@ -1678,6 +1785,10 @@ document.querySelectorAll('.nav-links a').forEach(link => {
       const target = document.querySelector(href);
       if (target) {
         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      if (navElement.classList.contains('open')) {
+        navElement.classList.remove('open');
+        mobileToggle.setAttribute('aria-expanded', 'false');
       }
     }
   });
