@@ -1,1799 +1,322 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bikram Sarkar — Observability, Infrastructure Engineering & AI Systems</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<title>Bikram Sarkar — Systems · AI · Observability</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
 <style>
-/* ═══════════════════════════════════════════════════════════ */
-/* THEME VARIABLES */
-/* ═══════════════════════════════════════════════════════════ */
-
-:root {
-  --bg: #fafafa;
-  --surface: #ffffff;
-  --surface-alt: #f6f7f9;
-  --border: #e8e9ed;
-  --text-primary: #1a1d23;
-  --text-secondary: #64646d;
-  --text-tertiary: #9a9ba3;
-  --accent: #0066cc;
-  --accent-hover: #0052a3;
-  --accent-light: #e6f0ff;
-  --success: #10a760;
-  --success-light: #e6f5ed;
-  --warning: #d97706;
-  --radius: 8px;
-  --radius-lg: 12px;
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.08);
-  --font-mono: 'Fira Code', monospace;
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-}
-
-/* Dark theme */
-html[data-theme="dark"] {
-  --bg: #0f1117;
-  --surface: #161b22;
-  --surface-alt: #1c2128;
-  --border: #30363d;
-  --text-primary: #e6edf3;
-  --text-secondary: #8b949e;
-  --text-tertiary: #6e7681;
-  --accent: #58a6ff;
-  --accent-hover: #79c0ff;
-  --accent-light: rgba(88, 166, 255, 0.1);
-  --success: #3fb950;
-  --success-light: rgba(63, 185, 80, 0.1);
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  min-height: 100vh;
-  background: radial-gradient(circle at top left, rgba(88, 166, 255, 0.12), transparent 18%), radial-gradient(circle at bottom right, rgba(0, 102, 204, 0.1), transparent 20%), var(--bg);
-  color: var(--text-primary);
-  font-family: var(--font-sans);
-  line-height: 1.6;
-  font-size: 15px;
-  transition: background 0.3s, color 0.3s;
-}
-
-/* ═══════════════════════════════════════════════════════════ */
-/* HEADER / NAV */
-/* ═══════════════════════════════════════════════════════════ */
-
-header {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  background: rgba(250, 250, 250, 0.95);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--border);
-  transition: background 0.3s, border-color 0.3s;
-}
-
-html[data-theme="dark"] header {
-  background: rgba(15, 17, 23, 0.95);
-}
-
-nav {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px 40px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-}
-
-.nav-logo {
-  font-weight: 700;
-  font-size: 16px;
-  color: var(--text-primary);
-  text-decoration: none;
-  letter-spacing: -0.02em;
-}
-
-.nav-logo strong {
-  color: var(--accent);
-}
-
-.nav-links {
-  display: flex;
-  gap: 40px;
-  list-style: none;
-}
-
-.nav-links a {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--text-secondary);
-  text-decoration: none;
-  transition: color 0.2s;
-}
-
-.nav-links a:hover {
-  color: var(--accent);
-}
-
-.mobile-menu-toggle {
-  display: none;
-  background: transparent;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  color: var(--text-secondary);
-  padding: 8px 10px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: all 0.2s;
-}
-
-.mobile-menu-toggle:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-nav.open .nav-links {
-  display: flex;
-  position: absolute;
-  top: 100%;
-  right: 40px;
-  width: min(320px, calc(100vw - 48px));
-  flex-direction: column;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
-  padding: 18px 20px;
-  margin-top: 12px;
-}
-
-nav.open .nav-links a {
-  padding: 10px 0;
-}
-
-.theme-toggle {
-  background: var(--surface-alt);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 6px 12px;
-  cursor: pointer;
-  font-size: 13px;
-  color: var(--text-secondary);
-  transition: all 0.2s;
-  font-weight: 500;
-}
-
-.theme-toggle:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.nav-status {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  color: var(--text-secondary);
-}
-
-.status-dot {
-  width: 6px;
-  height: 6px;
-  background: var(--success);
-  border-radius: 50%;
-  animation: pulse-dot 2s infinite;
-}
-
-@keyframes pulse-dot {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
-
-/* ═══════════════════════════════════════════════════════════ */
-/* HERO SECTION */
-/* ═══════════════════════════════════════════════════════════ */
-
-.hero {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 80px 40px 100px;
-}
-
-.hero-badge {
-  display: inline-block;
-  background: var(--accent-light);
-  color: var(--accent);
-  padding: 6px 14px;
-  border-radius: 100px;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  margin-bottom: 20px;
-}
-
-.hero-title {
-  font-size: 52px;
-  font-weight: 700;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-  margin-bottom: 16px;
-  color: var(--text-primary);
-}
-
-.hero-title .accent {
-  color: var(--accent);
-}
-
-.hero-subtitle {
-  font-size: 18px;
-  color: var(--text-secondary);
-  max-width: 600px;
-  line-height: 1.7;
-  margin-bottom: 32px;
-}
-
-.hero-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  margin-bottom: 40px;
-}
-
-.button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  border-radius: 999px;
-  padding: 14px 22px;
-  font-size: 14px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: transform 0.2s, background 0.2s, color 0.2s, border 0.2s;
-}
-
-.button:hover {
-  transform: translateY(-1px);
-}
-
-.button-primary {
-  background: var(--accent);
-  color: #ffffff;
-  border: 1px solid transparent;
-}
-
-.button-primary:hover {
-  background: var(--accent-hover);
-}
-
-.button-secondary {
-  background: var(--surface-alt);
-  color: var(--text-primary);
-  border: 1px solid var(--border);
-}
-
-.button-secondary:hover {
-  border-color: var(--accent);
-}
-
-.hero-stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 40px;
-  margin-top: 60px;
-}
-
-.stat {
-  display: flex;
-  flex-direction: column;
-}
-
-.stat-value {
-  font-size: 32px;
-  font-weight: 700;
-  color: var(--accent);
-  margin-bottom: 4px;
-  font-family: var(--font-mono);
-}
-
-.stat-label {
-  font-size: 13px;
-  color: var(--text-secondary);
-  font-weight: 500;
-}
-
-/* ═══════════════════════════════════════════════════════════ */
-/* SECTIONS */
-/* ═══════════════════════════════════════════════════════════ */
-
-section {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 80px 40px;
-  border-top: 1px solid var(--border);
-}
-
-.section-header {
-  margin-bottom: 48px;
-}
-
-.section-label {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  color: var(--text-tertiary);
-  text-transform: uppercase;
-  margin-bottom: 12px;
-}
-
-.section-title {
-  font-size: 36px;
-  font-weight: 700;
-  color: var(--text-primary);
-  letter-spacing: -0.01em;
-}
-
-.section-title .accent {
-  color: var(--accent);
-}
-
-/* ═══════════════════════════════════════════════════════════ */
-/* ABOUT SECTION */
-/* ═══════════════════════════════════════════════════════════ */
-
-.about-content {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
-  align-items: start;
-}
-
-.about-bio {
-  font-size: 16px;
-  line-height: 1.8;
-  color: var(--text-secondary);
-}
-
-.about-bio p + p {
-  margin-top: 16px;
-}
-
-.about-bio strong {
-  color: var(--text-primary);
-  font-weight: 600;
-}
-
-.about-credentials {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.credential-card {
-  background: var(--surface-alt);
-  border: 1px solid var(--border);
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-  padding: 16px;
-  border-radius: var(--radius-lg);
-  transition: all 0.2s;
-}
-
-.credential-card:hover {
-  border-color: var(--accent);
-  background: var(--accent-light);
-}
-
-.credential-icon {
-  font-size: 20px;
-  flex-shrink: 0;
-}
-
-.credential-info {
-  flex: 1;
-}
-
-.credential-title {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 2px;
-}
-
-.credential-sub {
-  font-size: 12px;
-  color: var(--text-tertiary);
-}
-
-/* ═══════════════════════════════════════════════════════════ */
-/* EXPERIENCE SECTION */
-/* ═══════════════════════════════════════════════════════════ */
-
-.experience-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-
-.experience-item {
-  padding: 28px 0;
-  border-bottom: 1px solid var(--border);
-}
-
-.experience-item:last-child {
-  border-bottom: none;
-}
-
-.experience-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 8px;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.experience-role {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--text-primary);
-}
-
-.experience-badge {
-  background: var(--accent-light);
-  color: var(--accent);
-  padding: 4px 10px;
-  border-radius: 4px;
-  font-size: 11px;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.experience-company {
-  font-size: 13px;
-  color: var(--text-tertiary);
-  font-weight: 500;
-  margin-bottom: 8px;
-}
-
-.experience-description {
-  font-size: 15px;
-  color: var(--text-secondary);
-  line-height: 1.7;
-  margin-bottom: 12px;
-}
-
-.experience-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 12px;
-}
-
-.tag {
-  background: var(--surface-alt);
-  color: var(--text-secondary);
-  padding: 4px 10px;
-  border-radius: 4px;
-  font-size: 12px;
-  border: 1px solid var(--border);
-  transition: all 0.2s;
-}
-
-.tag.primary {
-  background: var(--accent-light);
-  color: var(--accent);
-  border-color: var(--accent-light);
-}
-
-.tag.success {
-  background: var(--success-light);
-  color: var(--success);
-  border-color: var(--success-light);
-}
-
-/* ═══════════════════════════════════════════════════════════ */
-/* PROJECTS SECTION */
-/* ═══════════════════════════════════════════════════════════ */
-
-.projects-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 24px;
-}
-
-.project-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 24px;
-  transition: all 0.3s;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  overflow: hidden;
-}
-
-.project-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: var(--accent);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.3s;
-}
-
-.project-card:hover {
-  border-color: var(--accent);
-  box-shadow: var(--shadow-md);
-}
-
-.project-card:hover::before {
-  transform: scaleX(1);
-}
-
-.project-featured {
-  background: linear-gradient(135deg, var(--accent-light), #f0f5ff);
-  border: 2px solid var(--accent);
-}
-
-.project-featured::before {
-  transform: scaleX(1);
-}
-
-.project-icon {
-  font-size: 28px;
-  margin-bottom: 12px;
-}
-
-.project-title {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 8px;
-}
-
-.project-description {
-  font-size: 14px;
-  color: var(--text-secondary);
-  line-height: 1.6;
-  margin-bottom: 16px;
-  flex-grow: 1;
-}
-
-.project-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--accent);
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 13px;
-  transition: gap 0.2s;
-  margin-top: auto;
-}
-
-.project-link:hover {
-  gap: 12px;
-}
-
-.project-tech {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 12px;
-}
-
-/* ═══════════════════════════════════════════════════════════ */
-/* SKILLS SECTION */
-/* ═══════════════════════════════════════════════════════════ */
-
-.skills-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 24px;
-}
-
-.skill-group {
-  background: var(--surface-alt);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 24px;
-  transition: all 0.2s;
-}
-
-.skill-group:hover {
-  border-color: var(--accent);
-}
-
-.skill-group-title {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 18px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.skill-group-title::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--border);
-}
-
-.skill-item {
-  margin-bottom: 14px;
-}
-
-.skill-item:last-child {
-  margin-bottom: 0;
-}
-
-.skill-name {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 6px;
-}
-
-.skill-label {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.skill-level {
-  font-size: 11px;
-  color: var(--text-tertiary);
-}
-
-.skill-bar {
-  width: 100%;
-  height: 4px;
-  background: var(--border);
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-.skill-bar-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--accent), var(--accent-hover));
-  border-radius: 2px;
-  width: 0%;
-  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* ═══════════════════════════════════════════════════════════ */
-/* TIMELINE SECTION */
-/* ═══════════════════════════════════════════════════════════ */
-
-.timeline-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 20px;
-}
-
-.timeline-item {
-  text-align: center;
-  padding: 20px;
-  border-radius: var(--radius-lg);
-  background: var(--surface-alt);
-  border: 1px solid var(--border);
-  transition: all 0.2s;
-}
-
-.timeline-item:hover {
-  border-color: var(--accent);
-  background: var(--accent-light);
-}
-
-.timeline-year {
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--accent);
-  margin-bottom: 8px;
-  font-family: var(--font-mono);
-}
-
-.timeline-description {
-  font-size: 12px;
-  color: var(--text-secondary);
-  line-height: 1.5;
-}
-
-/* ═══════════════════════════════════════════════════════════ */
-/* OBSYGNAL FEATURED PROJECT */
-/* ═══════════════════════════════════════════════════════════ */
-
-#obsygnal {
-  background: var(--accent-light);
-  border-top: 1px solid var(--border);
-}
-
-.obsygnal-hero {
-  text-align: center;
-  margin-bottom: 48px;
-}
-
-.obsygnal-title {
-  font-size: 40px;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 12px;
-  letter-spacing: -0.01em;
-}
-
-.obsygnal-description {
-  font-size: 16px;
-  color: var(--text-secondary);
-  line-height: 1.7;
-  max-width: 700px;
-  margin: 0 auto;
-}
-
-.obsygnal-demo {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  box-shadow: var(--shadow-md);
-}
-
-.demo-header {
-  background: var(--surface-alt);
-  border-bottom: 1px solid var(--border);
-  padding: 12px 16px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  color: var(--text-secondary);
-  font-family: var(--font-mono);
-}
-
-.demo-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-}
-
-.demo-dot.red { background: #ff5f56; }
-.demo-dot.yellow { background: #ffbd2e; }
-.demo-dot.green { background: #27c93f; }
-
-.demo-content {
-  padding: 24px;
-}
-
-.metrics-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-}
-
-.metric-box {
-  background: var(--surface-alt);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 16px;
-  text-align: center;
-}
-
-.metric-value {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--accent);
-  margin-bottom: 4px;
-  font-family: var(--font-mono);
-}
-
-.metric-label {
-  font-size: 11px;
-  color: var(--text-tertiary);
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-}
-
-/* ═══════════════════════════════════════════════════════════ */
-/* EDUCATION SECTION */
-/* ═══════════════════════════════════════════════════════════ */
-
-.education-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 20px;
-}
-
-.education-card {
-  background: var(--surface-alt);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 24px;
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  transition: all 0.2s;
-}
-
-.education-card:hover {
-  border-color: var(--accent);
-  background: var(--accent-light);
-}
-
-.education-icon {
-  font-size: 24px;
-  flex-shrink: 0;
+:root{
+  --bg:#ffffff;
+  --text:#111;
+  --muted:#666;
+  --border:#e5e7eb;
+  --accent:#0066ff;
 }
-
-.education-content {
-  flex: 1;
-}
-
-.education-degree {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 4px;
+html[data-theme="dark"]{
+  --bg:#0d1117;
+  --text:#e6edf3;
+  --muted:#8b949e;
+  --border:#30363d;
+  --accent:#58a6ff;
 }
 
-.education-institution {
-  font-size: 12px;
-  color: var(--text-tertiary);
-  margin-bottom: 6px;
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Inter,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.6;
 }
 
-.education-period {
-  font-size: 11px;
-  color: var(--text-secondary);
-  font-weight: 500;
+.container{
+  max-width:1000px;
+  margin:auto;
+  padding:40px 20px;
 }
-
-/* ═══════════════════════════════════════════════════════════ */
-/* CONTACT SECTION */
-/* ═══════════════════════════════════════════════════════════ */
 
-.contact-content {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
-  align-items: center;
-}
+h1{font-size:48px;line-height:1.1;margin:0}
+h2{margin-top:70px;font-size:28px}
+h3{margin:10px 0}
 
-.contact-description {
-  font-size: 15px;
-  color: var(--text-secondary);
-  line-height: 1.7;
-  margin-bottom: 32px;
-}
+p{color:var(--muted)}
+a{color:var(--accent);text-decoration:none}
 
-.contact-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+nav{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:40px;
 }
 
-.contact-link {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 14px 16px;
-  background: var(--surface-alt);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  text-decoration: none;
-  transition: all 0.2s;
+.theme-toggle{
+  border:1px solid var(--border);
+  background:none;
+  padding:6px 12px;
+  border-radius:6px;
 }
 
-.contact-link:hover {
-  border-color: var(--accent);
-  background: var(--accent-light);
+.hero{
+  margin-bottom:60px;
 }
 
-.contact-link-icon {
-  width: 32px;
-  height: 32px;
-  background: var(--accent-light);
-  border-radius: var(--radius);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  flex-shrink: 0;
+.hero p{
+  max-width:600px;
+  margin-top:15px;
 }
 
-.contact-link-text {
-  flex: 1;
+.cta{
+  margin-top:25px;
 }
 
-.contact-link-label {
-  font-size: 11px;
-  color: var(--text-tertiary);
-  display: block;
-  font-weight: 500;
-  margin-bottom: 2px;
+.cta a{
+  margin-right:15px;
+  font-weight:600;
 }
 
-.contact-link-value {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-primary);
+/* PROJECTS */
+.project{
+  border:1px solid var(--border);
+  padding:20px;
+  border-radius:10px;
+  margin-top:20px;
+  transition:.2s;
 }
-
-.contact-arrow {
-  color: var(--accent);
-  font-size: 16px;
-  transition: transform 0.2s;
+.project:hover{
+  border-color:var(--accent);
+  transform:translateY(-3px);
 }
 
-.contact-link:hover .contact-arrow {
-  transform: translateX(4px);
+/* TAGS */
+.tags{
+  margin-top:10px;
 }
-
-.contact-illustration {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 280px;
-  background: var(--accent-light);
-  border-radius: var(--radius-lg);
-  font-size: 48px;
+.tag{
+  display:inline-block;
+  font-size:12px;
+  padding:4px 8px;
+  margin:4px 4px 0 0;
+  border:1px solid var(--border);
+  border-radius:6px;
 }
 
-/* ═══════════════════════════════════════════════════════════ */
 /* FOOTER */
-/* ═══════════════════════════════════════════════════════════ */
-
-footer {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 40px;
-  border-top: 1px solid var(--border);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 13px;
-  color: var(--text-secondary);
+footer{
+  margin-top:80px;
+  font-size:13px;
+  color:var(--muted);
 }
 
-footer a {
-  color: var(--text-secondary);
-  text-decoration: none;
-  transition: color 0.2s;
+/* REVEAL */
+.reveal{
+  opacity:0;
+  transform:translateY(20px);
+  transition:.6s;
 }
-
-footer a:hover {
-  color: var(--accent);
-}
-
-.footer-left {
-  font-weight: 500;
-}
-
-.footer-right {
-  display: flex;
-  gap: 24px;
-}
-
-/* ═══════════════════════════════════════════════════════════ */
-/* REVEAL ANIMATIONS */
-/* ═══════════════════════════════════════════════════════════ */
-
-.reveal {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* ═══════════════════════════════════════════════════════════ */
-/* RESPONSIVE */
-/* ═══════════════════════════════════════════════════════════ */
-
-@media (max-width: 768px) {
-  nav {
-    flex-direction: column;
-    gap: 16px;
-    padding: 16px 24px;
-  }
-
-  .nav-links {
-    display: none;
-  }
-
-  nav.open .nav-links {
-    display: flex;
-  }
-
-  section {
-    padding: 60px 24px;
-  }
-
-  .hero {
-    padding: 60px 24px 80px;
-  }
-
-  .hero-title {
-    font-size: 36px;
-  }
-
-  .hero-subtitle {
-    font-size: 16px;
-  }
-
-  .hero-stats {
-    gap: 24px;
-  }
-
-  .about-content,
-  .contact-content {
-    grid-template-columns: 1fr;
-    gap: 40px;
-  }
-
-  .projects-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .skills-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .timeline-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
-
-  .education-list {
-    grid-template-columns: 1fr;
-  }
-
-  .section-title {
-    font-size: 28px;
-  }
-
-  .metrics-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  footer {
-    flex-direction: column;
-    gap: 24px;
-    text-align: center;
-  }
-
-  .footer-right {
-    flex-direction: column;
-    gap: 12px;
-  }
+.reveal.visible{
+  opacity:1;
+  transform:none;
 }
 </style>
 </head>
+
 <body>
 
-<!-- ═══════════════════════════════════════════════════════════ -->
-<!-- HEADER -->
-<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="container">
 
-<header>
-  <nav>
-    <a href="#" class="nav-logo"><strong>Bikram</strong> Sarkar</a>
-    <ul class="nav-links">
-      <li><a href="#about">About</a></li>
-      <li><a href="#experience">Experience</a></li>
-      <li><a href="#projects">Projects</a></li>
-      <li><a href="#skills">Skills</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-    <button id="mobile-toggle" class="mobile-menu-toggle" aria-expanded="false" aria-label="Open navigation menu">☰</button>
-    <div style="display: flex; align-items: center; gap: 16px;">
-      <div class="nav-status">
-        <div class="status-dot"></div>
-        <span>Available</span>
-      </div>
-      <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">🌙 Dark</button>
-    </div>
-  </nav>
-</header>
+<nav>
+  <strong>Bikram Sarkar</strong>
+  <button class="theme-toggle" id="theme">🌙</button>
+</nav>
 
-<main>
-
-<!-- ═══════════════════════════════════════════════════════════ -->
 <!-- HERO -->
-<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="hero reveal">
+<h1>
+Building <span style="color:var(--accent)">infra + AI systems</span><br>
+that scale beyond humans
+</h1>
 
-<section class="hero">
-  <div class="hero-badge">Technical Lead · Infrastructure & Cloud</div>
-  <h1 class="hero-title">
-    Building resilient systems at <span class="accent">Staff</span> level
-  </h1>
-  <p class="hero-subtitle">
-    Infrastructure Engineering · Observability · AI/ML Systems · SRE. I help organizations scale reliable infrastructure and reduce operational toil through thoughtful design and automation.
-  </p>
-  <div class="hero-actions">
-    <a href="mailto:sarkarbikram90@email.com" class="button button-primary">
-      Let's talk
-    </a>
-    <a href="#contact" class="button button-secondary">
-      Contact me
-    </a>
-  </div>
-  <div class="hero-stats">
-    <div class="stat">
-      <div class="stat-value">13<span style="font-size: 0.6em;">+</span></div>
-      <div class="stat-label">Years Experience</div>
-    </div>
-    <div class="stat">
-      <div class="stat-value">99<span style="font-size: 0.6em;">.</span>9%</div>
-      <div class="stat-label">Uptime Target</div>
-    </div>
-    <div class="stat">
-      <div class="stat-value">25<span style="font-size: 0.6em;">%</span></div>
-      <div class="stat-label">MTTR Improvement</div>
-    </div>
-    <div class="stat">
-      <div class="stat-value">3<span style="font-size: 0.6em;">x</span></div>
-      <div class="stat-label">Cloud Platforms</div>
-    </div>
-  </div>
+<p>
+Infrastructure engineer turned systems builder. I design observability platforms, 
+AI-driven operational systems, and tools that reduce chaos in distributed environments.
+</p>
+
+<p>
+Currently transitioning from IT operations leadership → product engineering → startup building.
+</p>
+
+<div class="cta">
+<a href="mailto:sarkarbikram90@email.com">Contact</a>
+<a href="https://github.com/sarkarbikram90" target="_blank">GitHub</a>
+<a href="https://obsygnal.com" target="_blank">Obsygnal</a>
+</div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════════ -->
 <!-- ABOUT -->
-<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="reveal">
+<h2>About</h2>
 
-<section id="about" class="reveal">
-  <div class="section-header">
-    <div class="section-label">01 • About</div>
-    <h2 class="section-title">The Person Behind<br>the <span class="accent">Stack</span></h2>
-  </div>
+<p>
+Started in customer support. Moved into IT operations. Now building systems.
+That journey gave me a rare advantage — I understand how systems break at every layer.
+</p>
 
-  <div class="about-content">
-    <div class="about-bio">
-      <p>Forward-thinking IT Operations leader with <strong>13+ years</strong> of cross-domain experience in incident & change management, cloud infrastructure across <strong>Azure, AWS, and GCP</strong>, and automation engineering.</p>
-      <p>I build and lead high-performance teams that drive reliability, stability, and innovation across mission-critical enterprise systems — currently leading a global monitoring and application ops team for <strong>energy and utility sector</strong> clients.</p>
-      <p>My journey started in customer support, evolved through service desk and project coordination, and grew into <strong>infrastructure leadership</strong> — giving me a genuine full-stack perspective on how systems fail and how to prevent it.</p>
-      <p>I push hard for reduced manual toil, better observability, and clear communication during crises. When systems break at 3am, I'm the calm voice coordinating the fix.</p>
-    </div>
+<p>
+I focus on observability, infrastructure reliability, and AI-assisted operations.
+The goal is simple: eliminate manual toil and make systems self-aware.
+</p>
 
-    <div class="about-credentials">
-      <div class="credential-card">
-        <div class="credential-icon">☁️</div>
-        <div class="credential-info">
-          <div class="credential-title">Google Cloud Professional ML Engineer</div>
-          <div class="credential-sub">Google Cloud Certified</div>
-        </div>
-      </div>
-      <div class="credential-card">
-        <div class="credential-icon">⚙️</div>
-        <div class="credential-info">
-          <div class="credential-title">Postgraduate Program in DevOps</div>
-          <div class="credential-sub">Caltech · Simplilearn · 2022–2023</div>
-        </div>
-      </div>
-      <div class="credential-card">
-        <div class="credential-icon">🎓</div>
-        <div class="credential-info">
-          <div class="credential-title">Master of Computer Applications (MCA)</div>
-          <div class="credential-sub">University of Mysore · 2022–2024</div>
-        </div>
-      </div>
-      <div class="credential-card">
-        <div class="credential-icon">🎓</div>
-        <div class="credential-info">
-          <div class="credential-title">Bachelor's in Commerce (BCom)</div>
-          <div class="credential-sub">Siliguri College of Commerce · 2008–2011</div>
-        </div>
-      </div>
-    </div>
-  </div>
+<p>
+Long-term: building products that operate at scale and solve real-world infrastructure problems.
+</p>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════════ -->
-<!-- EXPERIENCE -->
-<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- CURRENT ROLE -->
+<section class="reveal">
+<h2>Current Work</h2>
 
-<section id="experience" class="reveal">
-  <div class="section-header">
-    <div class="section-label">02 • Experience</div>
-    <h2 class="section-title">13 Years of<br><span class="accent">Operational Excellence</span></h2>
-  </div>
+<p><strong>Technical Lead — Infrastructure & Monitoring</strong></p>
 
-  <div class="experience-list">
-    <div class="experience-item">
-      <div class="experience-header">
-        <div class="experience-role">Technical Lead — Infra & Cloud Monitoring</div>
-        <div class="experience-badge">May 2024 – Present</div>
-      </div>
-      <div class="experience-company">Resolve Tech Solutions · Hyderabad, India</div>
-      <div class="experience-description">
-        Leading global monitoring and application ops for energy and utility sector clients. Driving digital modernization through strategic observability, incident command during P1/P2 outages, and data-driven ML decision-making. Achieved <strong>25% improvement in incident resolution times</strong>. Leads offshore team responsible for infrastructure health monitoring and application performance.
-      </div>
-      <div class="experience-tags">
-        <span class="tag primary">SRE</span>
-        <span class="tag primary">Observability</span>
-        <span class="tag success">Azure</span>
-        <span class="tag success">AWS</span>
-        <span class="tag success">GCP</span>
-        <span class="tag">ML Decision-Making</span>
-        <span class="tag">Incident Management</span>
-        <span class="tag">Team Leadership</span>
-      </div>
-    </div>
+<p>
+Leading global monitoring operations for enterprise systems. Driving incident response, 
+observability strategy, and reliability improvements across AWS, Azure, and GCP.
+</p>
 
-    <div class="experience-item">
-      <div class="experience-header">
-        <div class="experience-role">Senior Engineer — IT Operations</div>
-        <div class="experience-badge">Jan 2022 – Apr 2024</div>
-      </div>
-      <div class="experience-company">Resolve Tech Solutions · Hyderabad, India</div>
-      <div class="experience-description">
-        Led team of engineers enhancing IT infrastructure monitoring and streamlining incident & change management. Administered Autosys for job scheduling, monitored energy/utility applications, presented performance reports to clients.
-      </div>
-      <div class="experience-tags">
-        <span class="tag primary">Autosys</span>
-        <span class="tag">ServiceNow ITSM</span>
-        <span class="tag">Change Management</span>
-        <span class="tag">Client Reporting</span>
-      </div>
-    </div>
-
-    <div class="experience-item">
-      <div class="experience-header">
-        <div class="experience-role">Sr. Project Associate</div>
-        <div class="experience-badge">Aug 2020 – Dec 2021</div>
-      </div>
-      <div class="experience-company">WiseMen Consulting · Hyderabad, India</div>
-      <div class="experience-description">
-        Coordinated incident and change management via ServiceNow ITSM. Managed batch job scheduling through Autosys. Developed comprehensive technical documentation improving team knowledge sharing.
-      </div>
-      <div class="experience-tags">
-        <span class="tag">ServiceNow</span>
-        <span class="tag">Autosys</span>
-        <span class="tag">Documentation</span>
-      </div>
-    </div>
-
-    <div class="experience-item">
-      <div class="experience-header">
-        <div class="experience-role">Technical Support Specialist</div>
-        <div class="experience-badge">Aug 2019 – Aug 2020</div>
-      </div>
-      <div class="experience-company">Dell Technologies · Hyderabad, India</div>
-      <div class="experience-description">
-        Provided comprehensive technical support to North American customers. Assisted with Windows 10 software installations and coordinated hardware repairs reducing turnaround time.
-      </div>
-      <div class="experience-tags">
-        <span class="tag">Technical Support</span>
-        <span class="tag">Windows</span>
-        <span class="tag">Hardware</span>
-      </div>
-    </div>
-
-    <div class="experience-item">
-      <div class="experience-header">
-        <div class="experience-role">Contact Center Associate → Contact Center Resolution Desk →
-        Service Desk → End User Computing </div>
-        <div class="experience-badge">Mar 2013 – Aug 2019</div>
-      </div>
-      <div class="experience-company">Wipro · Kolkata / Hyderabad, India</div>
-      <div class="experience-description">
-        Progressive career growth spanning 6+ years from Contact Center Associate to Service Desk Administrator. Delivered IT support for UK utility clients, managed Active Directory, achieved 95% first-contact resolution. Transitioned from BPO to IT operations.
-      </div>
-      <div class="experience-tags">
-        <span class="tag">Active Directory</span>
-        <span class="tag">ITSM</span>
-        <span class="tag">UK Utility Client</span>
-        <span class="tag">Service Desk</span>
-      </div>
-    </div>
-
-    <div class="experience-item">
-      <div class="experience-header">
-        <div class="experience-role">Front Desk Receptionist</div>
-        <div class="experience-badge">Jun 2012 – Feb 2013</div>
-      </div>
-      <div class="experience-company">Smart Tech Solutions · Siliguri, India</div>
-      <div class="experience-description">
-        First point of contact for Sony product inquiries. Managed customer complaints and service requests, collaborated with technical teams to ensure prompt resolution.
-      </div>
-      <div class="experience-tags">
-        <span class="tag">Customer Service</span>
-        <span class="tag">Sony Products</span>
-      </div>
-    </div>
-  </div>
+<p>
+Impact: Reduced MTTR, improved system visibility, and streamlined operations workflows.
+</p>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════════ -->
 <!-- PROJECTS -->
-<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="reveal">
+<h2>Projects</h2>
 
-<section id="projects" class="reveal">
-  <div class="section-header">
-    <div class="section-label">03 • Projects</div>
-    <h2 class="section-title">Things I'm<br><span class="accent">Building</span></h2>
-  </div>
+<div class="project">
+<h3>Obsygnal</h3>
+<p>
+Unified observability platform combining metrics, logs, traces, and system signals into one layer.
+Designed to give engineers full system awareness.
+</p>
 
-  <div class="projects-grid">
-    <div class="project-card project-featured">
-      <div class="project-icon">📡</div>
-      <div class="project-title">Obsygnal</div>
-      <div class="project-description">
-        Unified observability platform redefining how engineering teams understand distributed infrastructure. Metrics, logs, traces and signals — giving teams full system awareness.
-      </div>
-      <div class="project-tech">
-        <span class="tag primary">Prometheus</span>
-        <span class="tag primary">Grafana</span>
-        <span class="tag success">Go</span>
-        <span class="tag success">Distributed Systems</span>
-        <span class="tag">Metrics · Logs · Traces</span>
-      </div>
-      <a href="https://obsygnal.com" target="_blank" class="project-link">
-        obsygnal.com <span>→</span>
-      </a>
-    </div>
+<div class="tags">
+<span class="tag">Prometheus</span>
+<span class="tag">Grafana</span>
+<span class="tag">Go</span>
+<span class="tag">Distributed Systems</span>
+</div>
 
-    <div class="project-card">
-      <div class="project-icon">⚙️</div>
-      <div class="project-title">Rust Workflow Scheduler</div>
-      <div class="project-description">
-        Workflow orchestration system built in Rust for scheduling distributed workloads. Explores scheduling architectures and systems programming.
-      </div>
-      <div class="project-tech">
-        <span class="tag">Rust</span>
-        <span class="tag">Distributed Systems</span>
-        <span class="tag">Scheduling</span>
-      </div>
-    </div>
+<a href="https://obsygnal.com" target="_blank">Explore →</a>
+</div>
 
-    <div class="project-card">
-      <div class="project-icon">🤖</div>
-      <div class="project-title">AI SRE Copilot</div>
-      <div class="project-description">
-        Experimental AI assistant for SRE teams to perform root cause analysis and automated remediation using infrastructure telemetry and LLM reasoning.
-      </div>
-      <div class="project-tech">
-        <span class="tag primary">LLMs</span>
-        <span class="tag success">Python</span>
-        <span class="tag">RCA Automation</span>
-        <span class="tag">Telemetry</span>
-      </div>
-    </div>
-  </div>
+<div class="project">
+<a href="https://secondgradient.com" target="_blank">Explore →</a>
+</div>
+<p>
+A thinking system for engineers and builders — focused on second-order effects, 
+decision-making, and long-term system behavior.
+</p>
+
+<p>
+Explores how actions evolve over time in complex systems — combining engineering, 
+AI, and strategic thinking.
+</p>
+
+<div class="tags">
+<span class="tag">Python</span>
+<span class="tag">Go</span>
+<span class="tag">PostgreSQL</span>
+<span class="tag">Systems Thinking</span>
+<span class="tag">AI Reasoning</span>
+<span class="tag">Decision Models</span>
+</div>
+</div>
+
+<div class="project">
+<h3>AI SRE Copilot</h3>
+<p>
+AI-powered assistant for root cause analysis and automated remediation using telemetry data.
+</p>
+
+<div class="tags">
+<span class="tag">Python</span>
+<span class="tag">LLMs</span>
+<span class="tag">FastAPI</span>
+<span class="tag">Prometheus</span>
+<span class="tag">OpenTelemetry</span>
+<span class="tag">RCA Automation</span>
+</div>
+</div>
+
+<div class="project">
+<h3>Rust Workflow Scheduler</h3>
+<p>
+Distributed workflow orchestration system exploring scheduling and systems programming.
+</p>
+
+<div class="tags">
+<span class="tag">Rust</span>
+<span class="tag">Tokio</span>
+<span class="tag">Distributed Systems</span>
+<span class="tag">Task Scheduling</span>
+<span class="tag">gRPC</span>
+<span class="tag">PostgreSQL</span>
+</div>
+</div>
+
 </section>
 
-<!-- ═══════════════════════════════════════════════════════════ -->
 <!-- SKILLS -->
-<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="reveal">
+<h2>Capabilities</h2>
 
-<section id="skills" class="reveal">
-  <div class="section-header">
-    <div class="section-label">04 • Skills</div>
-    <h2 class="section-title">Technical<br><span class="accent">Capabilities</span></h2>
-  </div>
-
-  <div class="skills-grid">
-    <div class="skill-group">
-      <div class="skill-group-title">⚡ Programming</div>
-      <div class="skill-item">
-        <div class="skill-name">
-          <span class="skill-label">Go</span>
-          <span class="skill-level">Intermediate</span>
-        </div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" data-width="85"></div>
-        </div>
-      </div>
-      <div class="skill-item">
-        <div class="skill-name">
-          <span class="skill-label">Python</span>
-          <span class="skill-level">Intermediate</span>
-        </div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" data-width="88"></div>
-        </div>
-      </div>
-      <div class="skill-item">
-        <div class="skill-name">
-          <span class="skill-label">Rust</span>
-          <span class="skill-level">Learning</span>
-        </div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" data-width="52"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="skill-group">
-      <div class="skill-group-title">☁️ Infrastructure</div>
-      <div class="skill-item">
-        <div class="skill-name">
-          <span class="skill-label">Azure / AWS / GCP</span>
-          <span class="skill-level">Advanced</span>
-        </div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" data-width="90"></div>
-        </div>
-      </div>
-      <div class="skill-item">
-        <div class="skill-name">
-          <span class="skill-label">Linux</span>
-          <span class="skill-level">Proficient</span>
-        </div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" data-width="92"></div>
-        </div>
-      </div>
-      <div class="skill-item">
-        <div class="skill-name">
-          <span class="skill-label">Terraform</span>
-          <span class="skill-level">Proficient</span>
-        </div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" data-width="78"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="skill-group">
-      <div class="skill-group-title">📊 Observability</div>
-      <div class="skill-item">
-        <div class="skill-name">
-          <span class="skill-label">Prometheus</span>
-          <span class="skill-level">Advanced</span>
-        </div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" data-width="93"></div>
-        </div>
-      </div>
-      <div class="skill-item">
-        <div class="skill-name">
-          <span class="skill-label">Grafana</span>
-          <span class="skill-level">Advanced</span>
-        </div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" data-width="91"></div>
-        </div>
-      </div>
-      <div class="skill-item">
-        <div class="skill-name">
-          <span class="skill-label">Metrics · Logs · Traces</span>
-          <span class="skill-level">Advanced</span>
-        </div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" data-width="95"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="skill-group">
-      <div class="skill-group-title">🤖 AI / Machine Learning</div>
-      <div class="skill-item">
-        <div class="skill-name">
-          <span class="skill-label">ML Lifecycle & Deployment</span>
-          <span class="skill-level">Proficient</span>
-        </div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" data-width="76"></div>
-        </div>
-      </div>
-      <div class="skill-item">
-        <div class="skill-name">
-          <span class="skill-label">Generative AI · LLMs · SLMs</span>
-          <span class="skill-level">Growing</span>
-        </div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" data-width="70"></div>
-        </div>
-      </div>
-      <div class="skill-item">
-        <div class="skill-name">
-          <span class="skill-label">Predictive Modelling</span>
-          <span class="skill-level">Proficient</span>
-        </div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" data-width="72"></div>
-        </div>
-      </div>
-    </div>
-  </div>
+<p>
+Go · Python · Rust · Terraform · Prometheus · Grafana · AWS · Azure · GCP · LLMs · Observability
+</p>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════════ -->
-<!-- TIMELINE -->
-<!-- ═══════════════════════════════════════════════════════════ -->
-
-<section id="timeline" class="reveal">
-  <div class="section-header">
-    <div class="section-label">05 • Journey</div>
-    <h2 class="section-title">A Decade of<br><span class="accent">Growth</span></h2>
-  </div>
-
-  <div class="timeline-grid">
-    <div class="timeline-item">
-      <div class="timeline-year">2011</div>
-      <div class="timeline-description">Graduated in Commerce — Siliguri College</div>
-    </div>
-    <div class="timeline-item">
-      <div class="timeline-year">2014</div>
-      <div class="timeline-description">Entered IT industry at Wipro</div>
-    </div>
-    <div class="timeline-item">
-      <div class="timeline-year">2020</div>
-      <div class="timeline-description">Transitioned into infrastructure leadership</div>
-    </div>
-    <div class="timeline-item">
-      <div class="timeline-year">2024</div>
-      <div class="timeline-description">MCA completed · GCP ML certified · Technical Lead</div>
-    </div>
-    <div class="timeline-item">
-      <div class="timeline-year">Now</div>
-      <div class="timeline-description">Building Obsygnal · Growing the craft</div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════════════════ -->
-<!-- OBSYGNAL FEATURED -->
-<!-- ═══════════════════════════════════════════════════════════ -->
-
-<section id="obsygnal" class="reveal">
-  <div class="obsygnal-hero">
-    <div class="section-label" style="justify-content: center; margin-bottom: 12px;">06 • Featured Project</div>
-    <h2 class="obsygnal-title">
-      <span class="accent">Obsygnal</span>
-    </h2>
-    <p class="obsygnal-description">
-      Redefining observability — metrics, logs, traces and signals flowing across distributed infrastructure. Gives engineering teams <strong>full system awareness</strong>.
-    </p>
-  </div>
-
-  <div class="obsygnal-demo">
-    <div class="demo-header">
-      <div class="demo-dot red"></div>
-      <div class="demo-dot yellow"></div>
-      <div class="demo-dot green"></div>
-      <span>obsygnal — system overview · production cluster</span>
-    </div>
-    <div class="demo-content">
-      <div class="metrics-grid">
-        <div class="metric-box">
-          <div class="metric-value">99.97%</div>
-          <div class="metric-label">Uptime</div>
-        </div>
-        <div class="metric-box">
-          <div class="metric-value">142ms</div>
-          <div class="metric-label">P99 Latency</div>
-        </div>
-        <div class="metric-box">
-          <div class="metric-value">3,847</div>
-          <div class="metric-label">Req/sec</div>
-        </div>
-        <div class="metric-box">
-          <div class="metric-value">0.03%</div>
-          <div class="metric-label">Error Rate</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════════════════ -->
-<!-- EDUCATION -->
-<!-- ═══════════════════════════════════════════════════════════ -->
-
-<section id="education" class="reveal">
-  <div class="section-header">
-    <div class="section-label">07 • Education</div>
-    <h2 class="section-title">Academic<br><span class="accent">Foundation</span></h2>
-  </div>
-
-  <div class="education-list">
-    <div class="education-card">
-      <div class="education-icon">🎓</div>
-      <div class="education-content">
-        <div class="education-degree">Master of Computer Applications (MCA)</div>
-        <div class="education-institution">University of Mysore</div>
-        <div class="education-period">Nov 2022 – Dec 2024</div>
-      </div>
-    </div>
-    <div class="education-card">
-      <div class="education-icon">⚙️</div>
-      <div class="education-content">
-        <div class="education-degree">Postgraduate Program in DevOps</div>
-        <div class="education-institution">Caltech · Delivered by Simplilearn</div>
-        <div class="education-period">Sep 2022 – Jun 2023</div>
-      </div>
-    </div>
-    <div class="education-card">
-      <div class="education-icon">📚</div>
-      <div class="education-content">
-        <div class="education-degree">Bachelor's in Computer Application</div>
-        <div class="education-institution">Siliguri College of Commerce</div>
-        <div class="education-period">2008 – 2011</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════════════════ -->
 <!-- CONTACT -->
-<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="reveal">
+<h2>Contact</h2>
 
-<section id="contact" class="reveal">
-  <div class="section-header">
-    <div class="section-label">08 • Contact</div>
-    <h2 class="section-title">Let's Build<br>Something <span class="accent">Reliable</span></h2>
-  </div>
+<p>
+If you're building something in infrastructure, observability, or AI systems — let's collaborate.
+</p>
 
-  <div class="contact-content">
-    <div>
-      <p class="contact-description">
-        Open to collaboration on observability tools, infrastructure automation, AI/ML systems, and anything that makes complex systems more understandable and reliable.
-      </p>
-      <div class="contact-list">
-        <a href="https://github.com/sarkarbikram90" target="_blank" class="contact-link">
-          <div class="contact-link-icon">⌥</div>
-          <div class="contact-link-text">
-            <span class="contact-link-label">GitHub</span>
-            <span class="contact-link-value">sarkarbikram90</span>
-          </div>
-          <div class="contact-arrow">→</div>
-        </a>
-        <a href="https://www.linkedin.com/in/bikramsarkar/" target="_blank" class="contact-link">
-          <div class="contact-link-icon">in</div>
-          <div class="contact-link-text">
-            <span class="contact-link-label">LinkedIn</span>
-            <span class="contact-link-value">bikramsarkar</span>
-          </div>
-          <div class="contact-arrow">→</div>
-        </a>
-        <a href="https://medium.com/@sarkarbikram90" target="_blank" class="contact-link">
-          <div class="contact-link-icon">✍</div>
-          <div class="contact-link-text">
-            <span class="contact-link-label">Blog</span>
-            <span class="contact-link-value">medium.com/@sarkarbikram90</span>
-          </div>
-          <div class="contact-arrow">→</div>
-        </a>
-        <a href="mailto:sarkarbikram90@email.com" class="contact-link">
-          <div class="contact-link-icon">✉</div>
-          <div class="contact-link-text">
-            <span class="contact-link-label">Email</span>
-            <span class="contact-link-value">sarkarbikram90@email.com</span>
-          </div>
-          <div class="contact-arrow">→</div>
-        </a>
-      </div>
-    </div>
-    <div class="contact-illustration">
-      <span style="font-size: 80px; opacity: 0.2;">▦</span>
-    </div>
-  </div>
+<p>
+<a href="mailto:sarkarbikram90@email.com">Email</a> · 
+<a href="https://linkedin.com/in/bikramsarkar" target="_blank">LinkedIn</a> · 
+<a href="https://medium.com/@sarkarbikram90" target="_blank">Blog</a>
+</p>
 </section>
-</main>
-
-<!-- ═══════════════════════════════════════════════════════════ -->
-<!-- FOOTER -->
-<!-- ═══════════════════════════════════════════════════════════ -->
 
 <footer>
-  <div class="footer-left">© 2026 Bikram Sarkar · All systems operational</div>
-  <div class="footer-right">
-    <a href="https://github.com/sarkarbikram90" target="_blank">GitHub</a>
-    <a href="https://www.linkedin.com/in/bikramsarkar/" target="_blank">LinkedIn</a>
-    <a href="https://medium.com/@sarkarbikram90" target="_blank">Blog</a>
-    <a href="https://obsygnal.com" target="_blank">Obsygnal</a>
-  </div>
+© 2026 Bikram Sarkar · Building systems that think
 </footer>
 
+</div>
+
 <script>
-// ═══════════════════════════════════════════════════════════
-// THEME TOGGLE
-// ═══════════════════════════════════════════════════════════
-
-const themeToggle = document.getElementById('theme-toggle');
-const mobileToggle = document.getElementById('mobile-toggle');
-const html = document.documentElement;
-const navElement = document.querySelector('nav');
-
-// Load saved theme from localStorage
-const savedTheme = localStorage.getItem('theme') || 'light';
-html.setAttribute('data-theme', savedTheme);
-updateThemeButton(savedTheme);
-
-if (mobileToggle) {
-  mobileToggle.addEventListener('click', () => {
-    const expanded = mobileToggle.getAttribute('aria-expanded') === 'true';
-    mobileToggle.setAttribute('aria-expanded', String(!expanded));
-    navElement.classList.toggle('open');
-  });
-}
-
-themeToggle.addEventListener('click', () => {
-  const currentTheme = html.getAttribute('data-theme');
-  const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-  html.setAttribute('data-theme', newTheme);
-  localStorage.setItem('theme', newTheme);
-  updateThemeButton(newTheme);
-});
-
-function updateThemeButton(theme) {
-  themeToggle.textContent = theme === 'light' ? '🌙 Dark' : '☀️ Light';
-}
-
-// ═══════════════════════════════════════════════════════════
-// SCROLL REVEAL
-// ═══════════════════════════════════════════════════════════
-
-const observerOptions = {
-  threshold: 0.1,
-  rootMargin: '0px 0px -50px 0px'
+// THEME
+const btn=document.getElementById('theme');
+btn.onclick=()=>{
+  const html=document.documentElement;
+  const next=html.getAttribute('data-theme')==="light"?"dark":"light";
+  html.setAttribute('data-theme',next);
 };
 
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-      
-      // Animate skill bars
-      entry.target.querySelectorAll('.skill-bar-fill').forEach(bar => {
-        const width = bar.getAttribute('data-width');
-        setTimeout(() => {
-          bar.style.width = width + '%';
-        }, 100);
-      });
-    }
-  });
-}, observerOptions);
-
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-// ═══════════════════════════════════════════════════════════
-// SMOOTH SCROLL NAVIGATION
-// ═══════════════════════════════════════════════════════════
-
-document.querySelectorAll('.nav-links a').forEach(link => {
-  link.addEventListener('click', (e) => {
-    const href = link.getAttribute('href');
-    if (href.startsWith('#')) {
-      e.preventDefault();
-      const target = document.querySelector(href);
-      if (target) {
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-      if (navElement.classList.contains('open')) {
-        navElement.classList.remove('open');
-        mobileToggle.setAttribute('aria-expanded', 'false');
-      }
+// REVEAL
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
     }
   });
 });
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 </script>
 
 </body>
