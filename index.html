@@ -1,338 +1,935 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Bikram Sarkar — Systems · AI · Observability</title>
+<title>Bikram Sarkar | Systems Engineer • AI Infrastructure • Founder</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
+
 :root{
-  --bg:#ffffff;
-  --text:#111;
-  --muted:#666;
-  --border:#e5e7eb;
-  --accent:#0066ff;
-}
-html[data-theme="dark"]{
-  --bg:#0d1117;
-  --text:#e6edf3;
-  --muted:#8b949e;
-  --border:#30363d;
-  --accent:#58a6ff;
+
+--bg:#050816;
+--card:#0d1224;
+--card2:#121935;
+--text:#F8FAFC;
+--muted:#94A3B8;
+--border:#1E293B;
+
+--primary:#3B82F6;
+--secondary:#06B6D4;
+--success:#10B981;
+
+--gradient:linear-gradient(135deg,#3B82F6,#06B6D4);
+
 }
 
-*{box-sizing:border-box}
+html[data-theme="light"]{
+
+--bg:#F8FAFC;
+--card:#FFFFFF;
+--card2:#F1F5F9;
+--text:#0F172A;
+--muted:#475569;
+--border:#CBD5E1;
+
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+scroll-behavior:smooth;
+}
 
 body{
-  margin:0;
-  font-family:Inter,sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  line-height:1.6;
+
+font-family:Inter,sans-serif;
+background:var(--bg);
+color:var(--text);
+line-height:1.7;
+
+background-image:
+radial-gradient(circle at top right,rgba(59,130,246,.12),transparent 30%),
+radial-gradient(circle at bottom left,rgba(6,182,212,.10),transparent 35%);
+
 }
 
 .container{
-  max-width:1000px;
-  margin:auto;
-  padding:40px 20px;
+max-width:1200px;
+margin:auto;
+padding:0 28px;
 }
 
-h1{font-size:48px;line-height:1.1;margin:0}
-h2{margin-top:70px;font-size:28px}
-h3{margin:0}
+/* ---------------- NAV ---------------- */
 
-p{color:var(--muted);margin:0}
-
-a{color:var(--accent);text-decoration:none}
-
-/* NAV */
 nav{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:40px;
+
+position:sticky;
+top:0;
+backdrop-filter:blur(18px);
+background:rgba(5,8,22,.82);
+border-bottom:1px solid rgba(255,255,255,.05);
+
+z-index:100;
+
 }
 
-.theme-toggle{
-  border:1px solid var(--border);
-  background:none;
-  padding:6px 12px;
-  border-radius:6px;
-  cursor:pointer;
+.nav-inner{
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+
+height:78px;
+
 }
 
-/* HERO */
+.logo{
+
+font-size:22px;
+font-weight:800;
+
+}
+
+.logo span{
+
+color:#3B82F6;
+
+}
+
+.menu{
+
+display:flex;
+gap:30px;
+align-items:center;
+
+}
+
+.menu a{
+
+color:var(--muted);
+text-decoration:none;
+font-size:15px;
+
+transition:.25s;
+
+}
+
+.menu a:hover{
+
+color:white;
+
+}
+
+.theme{
+
+padding:10px 14px;
+border:none;
+background:var(--card);
+color:var(--text);
+border-radius:10px;
+cursor:pointer;
+
+}
+
+/* ---------------- HERO ---------------- */
+
 .hero{
-  margin-bottom:60px;
+
+padding:110px 0;
+
+display:grid;
+grid-template-columns:1.2fr .8fr;
+gap:60px;
+align-items:center;
+
+}
+
+.badge{
+
+display:inline-flex;
+gap:10px;
+align-items:center;
+
+padding:8px 16px;
+
+background:rgba(59,130,246,.10);
+
+border:1px solid rgba(59,130,246,.25);
+
+border-radius:100px;
+
+color:#60A5FA;
+
+font-size:14px;
+font-weight:600;
+
+margin-bottom:30px;
+
+}
+
+.hero h1{
+
+font-size:68px;
+font-weight:800;
+line-height:1.05;
+
+margin-bottom:30px;
+
+}
+
+.gradient{
+
+background:var(--gradient);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+
 }
 
 .hero p{
-  max-width:600px;
-  margin-top:15px;
+
+font-size:19px;
+color:var(--muted);
+
+max-width:720px;
+
+margin-bottom:18px;
+
 }
 
-.cta{
-  margin-top:25px;
+.buttons{
+
+display:flex;
+gap:18px;
+margin-top:40px;
+flex-wrap:wrap;
+
 }
 
-.cta a{
-  margin-right:15px;
-  font-weight:600;
+.btn{
+
+padding:15px 24px;
+border-radius:12px;
+font-weight:700;
+text-decoration:none;
+
+transition:.25s;
+
 }
 
-/* PROJECTS */
-.project{
-  border:1px solid var(--border);
-  padding:22px;
-  border-radius:10px;
-  margin-top:20px;
-  transition:.2s;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
+.primary{
+
+background:var(--gradient);
+color:white;
+
 }
 
-.project:hover{
-  border-color:var(--accent);
-  transform:translateY(-3px);
+.secondary{
+
+border:1px solid var(--border);
+background:var(--card);
+color:white;
+
 }
 
-.project a{
-  margin-top:8px;
-  font-weight:600;
-  display:inline-block;
+.btn:hover{
+
+transform:translateY(-3px);
+
 }
 
-/* TAGS */
+/* ---------------- HERO CARD ---------------- */
+
+.profile{
+
+background:linear-gradient(180deg,var(--card),var(--card2));
+
+padding:35px;
+
+border-radius:22px;
+
+border:1px solid var(--border);
+
+}
+
+.profile h3{
+
+margin-bottom:25px;
+
+font-size:22px;
+
+}
+
+.metric{
+
+margin-bottom:22px;
+
+}
+
+.metric h2{
+
+font-size:34px;
+
+color:#60A5FA;
+
+margin-bottom:4px;
+
+}
+
+.metric span{
+
+color:var(--muted);
+
+font-size:14px;
+
+}
+
+/* ---------------- SECTION ---------------- */
+
+section{
+
+padding:90px 0;
+
+}
+
+.section-title{
+
+font-size:38px;
+margin-bottom:18px;
+
+}
+
+.section-sub{
+
+max-width:780px;
+color:var(--muted);
+margin-bottom:55px;
+
+}
+
+/* ---------------- GRID ---------------- */
+
+.grid{
+
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+
+gap:24px;
+
+}
+
+.card{
+
+background:linear-gradient(180deg,var(--card),var(--card2));
+
+border:1px solid var(--border);
+
+border-radius:18px;
+
+padding:30px;
+
+transition:.3s;
+
+}
+
+.card:hover{
+
+transform:translateY(-8px);
+
+border-color:#3B82F6;
+
+box-shadow:0 18px 50px rgba(59,130,246,.18);
+
+}
+
+.card h3{
+
+font-size:24px;
+margin-bottom:18px;
+
+}
+
+.card p{
+
+color:var(--muted);
+
+margin-bottom:20px;
+
+}
+
+/* ---------------- TAGS ---------------- */
+
 .tags{
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px;
+
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+
 }
 
 .tag{
-  font-size:12px;
-  padding:4px 8px;
-  border:1px solid var(--border);
-  border-radius:6px;
+
+padding:7px 12px;
+
+font-size:13px;
+
+background:rgba(255,255,255,.05);
+
+border:1px solid var(--border);
+
+border-radius:999px;
+
 }
 
-/* FOOTER */
+/* ---------------- TIMELINE ---------------- */
+
+.timeline{
+
+border-left:2px solid rgba(59,130,246,.25);
+
+padding-left:30px;
+
+display:flex;
+flex-direction:column;
+gap:45px;
+
+}
+
+.item h3{
+
+margin-bottom:8px;
+
+}
+
+.item p{
+
+color:var(--muted);
+
+}
+
+/* ---------------- QUOTE ---------------- */
+
+.quote{
+
+background:var(--gradient);
+
+padding:60px;
+
+border-radius:22px;
+
+text-align:center;
+
+}
+
+.quote h2{
+
+font-size:38px;
+
+line-height:1.3;
+
+}
+
+/* ---------------- FOOTER ---------------- */
+
 footer{
-  margin-top:80px;
-  font-size:13px;
-  color:var(--muted);
+
+padding:60px 0;
+
+border-top:1px solid var(--border);
+
+text-align:center;
+
+color:var(--muted);
+
 }
 
-/* REVEAL */
+/* ---------------- REVEAL ---------------- */
+
 .reveal{
-  opacity:0;
-  transform:translateY(20px);
-  transition:.6s;
+
+opacity:0;
+transform:translateY(40px);
+transition:.8s;
+
 }
-.reveal.visible{
-  opacity:1;
-  transform:none;
+
+.visible{
+
+opacity:1;
+transform:none;
+
 }
+
+/* ---------------- MOBILE ---------------- */
+
+@media(max-width:900px){
+
+.hero{
+
+grid-template-columns:1fr;
+
+}
+
+.hero h1{
+
+font-size:46px;
+
+}
+
+.menu{
+
+display:none;
+
+}
+
+.quote h2{
+
+font-size:28px;
+
+}
+
+}
+
 </style>
+
 </head>
 
 <body>
 
-<div class="container">
-
 <nav>
-  <strong>Bikram Sarkar</strong>
-  <button class="theme-toggle" id="theme">🌙</button>
+
+<div class="container nav-inner">
+
+<div class="logo">
+Bikram<span>.</span>
+</div>
+
+<div class="menu">
+
+<a href="#about">About</a>
+<a href="#journey">Journey</a>
+<a href="#projects">Projects</a>
+<a href="#vision">Vision</a>
+<a href="#contact">Contact</a>
+
+<button id="theme" class="theme">☀️</button>
+
+</div>
+
+</div>
+
 </nav>
 
-<!-- HERO -->
+<div class="container">
+
 <section class="hero reveal">
+
+<div>
+
+<div class="badge">
+🚀 Building the future of AI Infrastructure
+</div>
+
 <h1>
-Building <span style="color:var(--accent)">infra + AI systems</span><br>
-that scale beyond humans
+
+I build
+<span class="gradient">distributed systems</span>,
+observability platforms,
+and AI products
+that solve
+real-world engineering problems.
+
 </h1>
 
 <p>
-Infrastructure engineer turned systems builder. I design observability platforms, 
-AI-driven operational systems, and tools that reduce chaos in distributed environments.
+
+I'm Bikram Sarkar — an Infrastructure & AI Systems Engineer with 13+ years of experience across IT Operations, Cloud Infrastructure, Incident Management, Reliability Engineering, and Platform Design.
+
 </p>
 
 <p>
-Currently transitioning from IT operations leadership → product engineering → startup building.
+
+Today I'm focused on building production-grade software using Rust, Go, Python, Distributed Systems, LLMs, and Cloud Infrastructure while working toward building a billion-dollar technology company that creates meaningful impact.
+
 </p>
 
-<div class="cta">
-<a href="mailto:sarkarbikram90@email.com">Contact</a>
-<a href="https://github.com/sarkarbikram90" target="_blank">GitHub</a>
+<div class="buttons">
+
+<a class="btn primary" href="https://github.com/sarkarbikram90" target="_blank">
+Explore My Work
+</a>
+
+<a class="btn secondary" href="mailto:sarkarbikram90@email.com">
+Let's Connect
+</a>
+
 </div>
+
+</div>
+
+<div class="profile">
+
+<h3>Current Focus</h3>
+
+<div class="metric">
+<h2>Observability</h2>
+<span>Cloud • Telemetry • OpenTelemetry • Prometheus • Grafana</span>
+</div>
+
+<div class="metric">
+<h2>AI Systems</h2>
+<span>LLMs • RAG • AI Agents • MLOps • Production AI</span>
+</div>
+
+<div class="metric">
+<h2>Systems Programming</h2>
+<span>Rust • Go • Python • PostgreSQL • Kafka</span>
+</div>
+
+<div class="metric">
+<h2>Mission</h2>
+<span>Build software that scales beyond human operators.</span>
+</div>
+
+</div>
+
 </section>
 
-<!-- ABOUT -->
-<section class="reveal">
-<h2>About</h2>
+<section id="about" class="reveal">
 
-<p>
-Started in customer support → moved into IT operations → now building systems.
-That journey gives me a rare advantage — I understand failure across every layer.
+<h2 class="section-title">Engineering Philosophy</h2>
+
+<p class="section-sub">
+
+I didn't begin my career writing software.
+
+I began by solving customer problems, moved into technical support, then infrastructure operations, incident management, cloud monitoring, and platform engineering.
+
+That journey gave me something many engineers never experience—
+
+a deep understanding of how systems actually fail in production.
+
+Today I build software from that perspective.
+
+Every product I create is designed to reduce operational complexity, automate decision making, and make distributed systems easier to understand.
+
 </p>
 
-<p>
-I focus on observability, infrastructure reliability, and AI-assisted operations.
-Goal: eliminate manual toil and make systems self-aware.
-</p>
-
-<p>
-Long-term: build products that operate at scale and solve real-world infrastructure problems.
-</p>
 </section>
 
-<!-- CURRENT WORK -->
-<section class="reveal">
-<h2>Current Work</h2>
+<section id="journey" class="reveal">
 
-<p><strong>Technical Lead — Infrastructure & Monitoring</strong></p>
+<h2 class="section-title">Career Evolution</h2>
+
+<div class="timeline">
+
+<div class="item">
+
+<h3>Customer Support → Technical Support</h3>
 
 <p>
-Leading global monitoring operations across AWS, Azure, and GCP. Driving incident response,
-observability strategy, and system reliability improvements.
+Learned empathy, communication, and problem solving under pressure.
 </p>
 
+</div>
+
+<div class="item">
+
+<h3>Infrastructure Operations Lead</h3>
+
 <p>
-Impact: reduced MTTR, improved visibility, and streamlined operations workflows.
+
+Led monitoring operations across AWS, Azure, and Google Cloud while managing critical production incidents, reliability initiatives, governance, and operational excellence.
+
 </p>
+
+</div>
+
+<div class="item">
+
+<h3>Software Engineering</h3>
+
+<p>
+
+Building cloud-native applications using Rust, Go, Python, distributed systems, APIs, PostgreSQL, Kafka, and modern software architecture.
+
+</p>
+
+</div>
+
+<div class="item">
+
+<h3>Founder Journey</h3>
+
+<p>
+
+Building products that combine AI, observability, and systems engineering to solve infrastructure challenges at global scale.
+
+</p>
+
+</div>
+
+</div>
+
 </section>
 
-<!-- PROJECTS -->
-<section class="reveal">
-<h2>Projects</h2>
+<section id="projects" class="reveal">
 
-<div class="project">
+<h2 class="section-title">Flagship Projects</h2>
+
+<div class="grid">
+
+<div class="card">
+
 <h3>Obsygnal</h3>
+
 <p>
-Unified observability platform combining metrics, logs, traces, and system signals into one layer.
-Designed for full system awareness.
+
+An AI-native observability platform combining metrics, logs, traces, events, machine learning, and intelligent automation into one unified operating layer.
+
 </p>
 
 <div class="tags">
-<span class="tag">Prometheus</span>
-<span class="tag">Grafana</span>
-<span class="tag">Go</span>
-<span class="tag">Distributed Systems</span>
+
+<div class="tag">Rust</div>
+<div class="tag">Go</div>
+<div class="tag">OpenTelemetry</div>
+<div class="tag">Prometheus</div>
+<div class="tag">Grafana</div>
+<div class="tag">AI</div>
+
 </div>
 
-<a href="https://obsygnal.com" target="_blank">Explore →</a>
 </div>
 
-<div class="project">
+<div class="card">
+
+<h3>Open SpaceOps</h3>
+
+<p>
+
+A modern satellite mission operations platform with telemetry pipelines, mission dashboards, anomaly detection, and AI-assisted spacecraft operations.
+
+</p>
+
+<div class="tags">
+
+<div class="tag">Rust</div>
+<div class="tag">Kafka</div>
+<div class="tag">Telemetry</div>
+<div class="tag">TimescaleDB</div>
+<div class="tag">Space</div>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h3>AI SRE Copilot</h3>
+
+<p>
+
+An AI-powered reliability engineer capable of analyzing telemetry, identifying root causes, recommending remediation, and reducing MTTR.
+
+</p>
+
+<div class="tags">
+
+<div class="tag">LLMs</div>
+<div class="tag">Python</div>
+<div class="tag">FastAPI</div>
+<div class="tag">Vector Search</div>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h3>Rust Workflow Scheduler</h3>
+
+<p>
+
+A distributed workflow orchestration engine focused on reliability, performance, concurrency, and enterprise-grade scheduling.
+
+</p>
+
+<div class="tags">
+
+<div class="tag">Rust</div>
+<div class="tag">Tokio</div>
+<div class="tag">gRPC</div>
+<div class="tag">PostgreSQL</div>
+
+</div>
+
+</div>
+
+<div class="card">
+
 <h3>SecondGradient</h3>
 
 <p>
-A thinking system for engineers and builders — focused on second-order effects, 
-decision-making, and long-term system behavior.
-</p>
 
-<p>
-Explores how actions evolve in complex systems by combining engineering, AI, and strategic reasoning.
+A long-term research initiative exploring systems thinking, second-order effects, strategic reasoning, AI decision making, and engineering leadership.
+
 </p>
 
 <div class="tags">
-<span class="tag">Python</span>
-<span class="tag">Go</span>
-<span class="tag">PostgreSQL</span>
-<span class="tag">Systems Thinking</span>
-<span class="tag">AI Reasoning</span>
-<span class="tag">Decision Models</span>
+
+<div class="tag">AI</div>
+<div class="tag">Strategy</div>
+<div class="tag">Systems Thinking</div>
+
 </div>
 
-<a href="https://secondgradient.com" target="_blank">Explore →</a>
 </div>
 
-<div class="project">
-<h3>AI SRE Copilot</h3>
+<div class="card">
+
+<h3>Future Vision</h3>
+
 <p>
-AI-powered assistant for root cause analysis and automated remediation using telemetry data.
+
+Enterprise AI Infrastructure.
+AI Operations.
+Autonomous Systems.
+Developer Platforms.
+Space Technology.
+
+The next decade is just getting started.
+
 </p>
 
-<div class="tags">
-<span class="tag">Python</span>
-<span class="tag">LLMs</span>
-<span class="tag">FastAPI</span>
-<span class="tag">Prometheus</span>
-<span class="tag">OpenTelemetry</span>
-<span class="tag">RCA Automation</span>
-</div>
 </div>
 
-<div class="project">
-<h3>Rust Workflow Scheduler</h3>
-<p>
-Distributed workflow orchestration system exploring scheduling and systems programming.
-</p>
-
-<div class="tags">
-<span class="tag">Rust</span>
-<span class="tag">Tokio</span>
-<span class="tag">Distributed Systems</span>
-<span class="tag">Task Scheduling</span>
-<span class="tag">gRPC</span>
-<span class="tag">PostgreSQL</span>
-</div>
 </div>
 
 </section>
 
-<!-- SKILLS -->
-<section class="reveal">
-<h2>Capabilities</h2>
+<section id="vision" class="reveal">
 
-<p>
-Go · Python · Rust · Terraform · Prometheus · Grafana · AWS · Azure · GCP · LLMs · Observability
-</p>
+<div class="quote">
+
+<h2>
+
+"I don't want to build another application.
+
+I want to build infrastructure that powers the next generation of intelligent systems."
+
+</h2>
+
+</div>
+
 </section>
 
-<!-- CONTACT -->
 <section class="reveal">
-<h2>Contact</h2>
 
-<p>
-If you're building in infrastructure, observability, or AI systems — let's collaborate.
+<h2 class="section-title">Technology Stack</h2>
+
+<div class="tags">
+
+<div class="tag">Rust</div>
+<div class="tag">Go</div>
+<div class="tag">Python</div>
+<div class="tag">AWS</div>
+<div class="tag">Azure</div>
+<div class="tag">Google Cloud</div>
+<div class="tag">Docker</div>
+<div class="tag">Kubernetes</div>
+<div class="tag">Terraform</div>
+<div class="tag">Prometheus</div>
+<div class="tag">Grafana</div>
+<div class="tag">OpenTelemetry</div>
+<div class="tag">Kafka</div>
+<div class="tag">PostgreSQL</div>
+<div class="tag">TimescaleDB</div>
+<div class="tag">LLMs</div>
+<div class="tag">RAG</div>
+<div class="tag">Distributed Systems</div>
+
+</div>
+
+</section>
+
+<section id="contact" class="reveal">
+
+<h2 class="section-title">Let's Build Something Meaningful</h2>
+
+<p class="section-sub">
+
+I'm always interested in conversations around distributed systems, observability, AI infrastructure, platform engineering, space technology, and ambitious startups solving difficult engineering problems.
+
 </p>
 
-<p>
-<a href="mailto:sarkarbikram90@email.com">Email</a> · 
-<a href="https://linkedin.com/in/bikramsarkar" target="_blank">LinkedIn</a> · 
-<a href="https://medium.com/@sarkarbikram90" target="_blank">Blog</a>
-</p>
+<div class="buttons">
+
+<a class="btn primary" href="mailto:sarkarbikram90@email.com">
+Email Me
+</a>
+
+<a class="btn secondary" href="https://github.com/sarkarbikram90" target="_blank">
+GitHub
+</a>
+
+<a class="btn secondary" href="https://linkedin.com/in/bikramsarkar" target="_blank">
+LinkedIn
+</a>
+
+</div>
+
 </section>
 
 <footer>
-© 2026 Bikram Sarkar · Building systems that think
+
+© 2026 Bikram Sarkar
+
+<br><br>
+
+Building software that helps humanity scale.
+
 </footer>
 
 </div>
 
 <script>
-// THEME
-const btn=document.getElementById('theme');
-btn.onclick=()=>{
-  const html=document.documentElement;
-  const next=html.getAttribute('data-theme')==="light"?"dark":"light";
-  html.setAttribute('data-theme',next);
+
+const theme=document.getElementById("theme");
+
+theme.onclick=()=>{
+
+const html=document.documentElement;
+
+const current=html.getAttribute("data-theme");
+
+html.setAttribute("data-theme",current==="dark"?"light":"dark");
+
+theme.innerHTML=current==="dark"?"🌙":"☀️";
+
 };
 
-// REVEAL
-const obs=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{
-    if(e.isIntersecting){
-      e.target.classList.add('visible');
-    }
-  });
+const observer=new IntersectionObserver(entries=>{
+
+entries.forEach(entry=>{
+
+if(entry.isIntersecting){
+
+entry.target.classList.add("visible");
+
+}
+
 });
-document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+},{threshold:.15});
+
+document.querySelectorAll(".reveal").forEach(el=>observer.observe(el));
+
 </script>
 
 </body>
