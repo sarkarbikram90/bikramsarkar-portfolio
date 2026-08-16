@@ -1,935 +1,1295 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title> Bikram Sarkar | Systems Engineer • AI Infrastructure • Founder </title>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
+<title>Bikram Sarkar | SRE & Platform Engineering Leader</title>
+<meta name="description" content="SRE & Platform Engineering Leader with 13+ years of experience. Building distributed systems, observability platforms, and governed AIOps solutions.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-
-:root{
-
---bg:#050816;
---card:#0d1224;
---card2:#121935;
---text:#F8FAFC;
---muted:#94A3B8;
---border:#1E293B;
-
---primary:#3B82F6;
---secondary:#06B6D4;
---success:#10B981;
-
---gradient:linear-gradient(135deg,#3B82F6,#06B6D4);
-
+:root {
+  --bg: #0a0a0f;
+  --bg-elevated: #12121a;
+  --card: #16161f;
+  --card-hover: #1c1c28;
+  --text: #f5f5f7;
+  --text-muted: #8b8b95;
+  --text-dim: #5a5a65;
+  --border: #2a2a35;
+  --border-hover: #3a3a48;
+  --primary: #6366f1;
+  --primary-light: #818cf8;
+  --accent: #22d3ee;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --gradient: linear-gradient(135deg, #6366f1 0%, #22d3ee 100%);
+  --gradient-subtle: linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(34,211,238,0.1) 100%);
+  --shadow: 0 20px 60px rgba(0,0,0,0.4);
+  --shadow-sm: 0 4px 20px rgba(0,0,0,0.3);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --radius-xs: 6px;
 }
 
-html[data-theme="light"]{
-
---bg:#F8FAFC;
---card:#FFFFFF;
---card2:#F1F5F9;
---text:#0F172A;
---muted:#475569;
---border:#CBD5E1;
-
+html[data-theme="light"] {
+  --bg: #fafafa;
+  --bg-elevated: #ffffff;
+  --card: #ffffff;
+  --card-hover: #f5f5f7;
+  --text: #1a1a1a;
+  --text-muted: #5a5a5a;
+  --text-dim: #8a8a8a;
+  --border: #e5e5e5;
+  --border-hover: #d0d0d0;
+  --shadow: 0 20px 60px rgba(0,0,0,0.08);
+  --shadow-sm: 0 4px 20px rgba(0,0,0,0.06);
 }
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-scroll-behavior:smooth;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-body{
-
-font-family:Inter,sans-serif;
-background:var(--bg);
-color:var(--text);
-line-height:1.7;
-
-background-image:
-radial-gradient(circle at top right,rgba(59,130,246,.12),transparent 30%),
-radial-gradient(circle at bottom left,rgba(6,182,212,.10),transparent 35%);
-
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
 }
 
-.container{
-max-width:1200px;
-margin:auto;
-padding:0 28px;
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  overflow-x: hidden;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
-/* ---------------- NAV ---------------- */
-
-nav{
-
-position:sticky;
-top:0;
-backdrop-filter:blur(18px);
-background:rgba(5,8,22,.82);
-border-bottom:1px solid rgba(255,255,255,.05);
-
-z-index:100;
-
+code, .mono {
+  font-family: 'JetBrains Mono', monospace;
 }
 
-.nav-inner{
-
-display:flex;
-justify-content:space-between;
-align-items:center;
-
-height:78px;
-
+/* Background Effects */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(99,102,241,0.12), transparent),
+    radial-gradient(ellipse 60% 40% at 80% 50%, rgba(34,211,238,0.08), transparent);
+  pointer-events: none;
+  z-index: 0;
 }
 
-.logo{
-
-font-size:22px;
-font-weight:800;
-
+html[data-theme="light"] body::before {
+  background: 
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(99,102,241,0.06), transparent),
+    radial-gradient(ellipse 60% 40% at 80% 50%, rgba(34,211,238,0.04), transparent);
 }
 
-.logo span{
-
-color:#3B82F6;
-
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  position: relative;
+  z-index: 1;
 }
 
-.menu{
-
-display:flex;
-gap:30px;
-align-items:center;
-
+/* Navigation */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: rgba(10,10,15,0.8);
+  border-bottom: 1px solid var(--border);
+  z-index: 1000;
+  transition: all 0.3s ease;
 }
 
-.menu a{
-
-color:var(--muted);
-text-decoration:none;
-font-size:15px;
-
-transition:.25s;
-
+html[data-theme="light"] nav {
+  background: rgba(250,250,250,0.85);
 }
 
-.menu a:hover{
-
-color:white;
-
+.nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 72px;
 }
 
-.theme{
-
-padding:10px 14px;
-border:none;
-background:var(--card);
-color:var(--text);
-border-radius:10px;
-cursor:pointer;
-
+.logo {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
 }
 
-/* ---------------- HERO ---------------- */
-
-.hero{
-
-padding:110px 0;
-
-display:grid;
-grid-template-columns:1.2fr .8fr;
-gap:60px;
-align-items:center;
-
+.logo span {
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.badge{
-
-display:inline-flex;
-gap:10px;
-align-items:center;
-
-padding:8px 16px;
-
-background:rgba(59,130,246,.10);
-
-border:1px solid rgba(59,130,246,.25);
-
-border-radius:100px;
-
-color:#60A5FA;
-
-font-size:14px;
-font-weight:600;
-
-margin-bottom:30px;
-
+.nav-links {
+  display: flex;
+  gap: 32px;
+  align-items: center;
 }
 
-.hero h1{
-
-font-size:68px;
-font-weight:800;
-line-height:1.05;
-
-margin-bottom:30px;
-
+.nav-links a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s ease;
 }
 
-.gradient{
-
-background:var(--gradient);
--webkit-background-clip:text;
--webkit-text-fill-color:transparent;
-
+.nav-links a:hover {
+  color: var(--text);
 }
 
-.hero p{
-
-font-size:19px;
-color:var(--muted);
-
-max-width:720px;
-
-margin-bottom:18px;
-
+.theme-toggle {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  transition: all 0.2s ease;
 }
 
-.buttons{
-
-display:flex;
-gap:18px;
-margin-top:40px;
-flex-wrap:wrap;
-
+.theme-toggle:hover {
+  border-color: var(--border-hover);
+  background: var(--card-hover);
 }
 
-.btn{
-
-padding:15px 24px;
-border-radius:12px;
-font-weight:700;
-text-decoration:none;
-
-transition:.25s;
-
+/* Hero Section */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 120px 0 80px;
 }
 
-.primary{
-
-background:var(--gradient);
-color:white;
-
+.hero-content {
+  max-width: 900px;
 }
 
-.secondary{
-
-border:1px solid var(--border);
-background:var(--card);
-color:white;
-
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: var(--gradient-subtle);
+  border: 1px solid rgba(99,102,241,0.2);
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary-light);
+  margin-bottom: 32px;
 }
 
-.btn:hover{
-
-transform:translateY(-3px);
-
+.hero-badge::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background: var(--success);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
 }
 
-/* ---------------- HERO CARD ---------------- */
-
-.profile{
-
-background:linear-gradient(180deg,var(--card),var(--card2));
-
-padding:35px;
-
-border-radius:22px;
-
-border:1px solid var(--border);
-
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.2); }
 }
 
-.profile h3{
-
-margin-bottom:25px;
-
-font-size:22px;
-
+.hero h1 {
+  font-size: clamp(40px, 6vw, 72px);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -2px;
+  margin-bottom: 24px;
 }
 
-.metric{
-
-margin-bottom:22px;
-
+.gradient-text {
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.metric h2{
-
-font-size:34px;
-
-color:#60A5FA;
-
-margin-bottom:4px;
-
+.hero-subtitle {
+  font-size: clamp(18px, 2vw, 22px);
+  color: var(--text-muted);
+  max-width: 700px;
+  margin-bottom: 40px;
+  line-height: 1.6;
 }
 
-.metric span{
-
-color:var(--muted);
-
-font-size:14px;
-
+.hero-buttons {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
-/* ---------------- SECTION ---------------- */
-
-section{
-
-padding:90px 0;
-
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 24px;
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  border: none;
+  cursor: pointer;
 }
 
-.section-title{
-
-font-size:38px;
-margin-bottom:18px;
-
+.btn-primary {
+  background: var(--gradient);
+  color: white;
+  box-shadow: 0 4px 20px rgba(99,102,241,0.3);
 }
 
-.section-sub{
-
-max-width:780px;
-color:var(--muted);
-margin-bottom:55px;
-
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(99,102,241,0.4);
 }
 
-/* ---------------- GRID ---------------- */
-
-.grid{
-
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
-
-gap:24px;
-
+.btn-secondary {
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
 }
 
-.card{
-
-background:linear-gradient(180deg,var(--card),var(--card2));
-
-border:1px solid var(--border);
-
-border-radius:18px;
-
-padding:30px;
-
-transition:.3s;
-
+.btn-secondary:hover {
+  border-color: var(--border-hover);
+  background: var(--card-hover);
+  transform: translateY(-2px);
 }
 
-.card:hover{
-
-transform:translateY(-8px);
-
-border-color:#3B82F6;
-
-box-shadow:0 18px 50px rgba(59,130,246,.18);
-
+.btn-ghost {
+  background: transparent;
+  color: var(--text-muted);
+  padding: 14px 16px;
 }
 
-.card h3{
-
-font-size:24px;
-margin-bottom:18px;
-
+.btn-ghost:hover {
+  color: var(--text);
 }
 
-.card p{
-
-color:var(--muted);
-
-margin-bottom:20px;
-
+/* Metrics Grid */
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+  padding: 60px 0;
 }
 
-/* ---------------- TAGS ---------------- */
-
-.tags{
-
-display:flex;
-flex-wrap:wrap;
-gap:10px;
-
+.metric-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  transition: all 0.3s ease;
 }
 
-.tag{
-
-padding:7px 12px;
-
-font-size:13px;
-
-background:rgba(255,255,255,.05);
-
-border:1px solid var(--border);
-
-border-radius:999px;
-
+.metric-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-sm);
 }
 
-/* ---------------- TIMELINE ---------------- */
-
-.timeline{
-
-border-left:2px solid rgba(59,130,246,.25);
-
-padding-left:30px;
-
-display:flex;
-flex-direction:column;
-gap:45px;
-
+.metric-value {
+  font-size: 36px;
+  font-weight: 800;
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+  letter-spacing: -1px;
 }
 
-.item h3{
-
-margin-bottom:8px;
-
+.metric-label {
+  font-size: 14px;
+  color: var(--text-muted);
+  font-weight: 500;
 }
 
-.item p{
-
-color:var(--muted);
-
+/* Sections */
+section {
+  padding: 100px 0;
 }
 
-/* ---------------- QUOTE ---------------- */
-
-.quote{
-
-background:var(--gradient);
-
-padding:60px;
-
-border-radius:22px;
-
-text-align:center;
-
+.section-header {
+  margin-bottom: 60px;
 }
 
-.quote h2{
-
-font-size:38px;
-
-line-height:1.3;
-
+.section-label {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--primary-light);
+  margin-bottom: 12px;
 }
 
-/* ---------------- FOOTER ---------------- */
-
-footer{
-
-padding:60px 0;
-
-border-top:1px solid var(--border);
-
-text-align:center;
-
-color:var(--muted);
-
+.section-title {
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin-bottom: 16px;
 }
 
-/* ---------------- REVEAL ---------------- */
-
-.reveal{
-
-opacity:0;
-transform:translateY(40px);
-transition:.8s;
-
+.section-desc {
+  font-size: 18px;
+  color: var(--text-muted);
+  max-width: 700px;
+  line-height: 1.7;
 }
 
-.visible{
-
-opacity:1;
-transform:none;
-
+/* Philosophy Section */
+.philosophy {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 60px;
+  position: relative;
+  overflow: hidden;
 }
 
-/* ---------------- MOBILE ---------------- */
-
-@media(max-width:900px){
-
-.hero{
-
-grid-template-columns:1fr;
-
+.philosophy::before {
+  content: '"';
+  position: absolute;
+  top: -20px;
+  left: 30px;
+  font-size: 200px;
+  font-weight: 800;
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  opacity: 0.15;
+  line-height: 1;
 }
 
-.hero h1{
-
-font-size:46px;
-
+.philosophy-text {
+  position: relative;
+  z-index: 1;
 }
 
-.menu{
-
-display:none;
-
+.philosophy-text p {
+  font-size: 20px;
+  line-height: 1.8;
+  color: var(--text-muted);
+  margin-bottom: 20px;
 }
 
-.quote h2{
-
-font-size:28px;
-
+.philosophy-text p:last-child {
+  margin-bottom: 0;
 }
 
+.philosophy-text strong {
+  color: var(--text);
+  font-weight: 600;
 }
 
+/* Projects Grid */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 24px;
+}
+
+.project-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  position: relative;
+  overflow: hidden;
+}
+
+.project-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.project-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-6px);
+  box-shadow: var(--shadow);
+}
+
+.project-card:hover::before {
+  opacity: 1;
+}
+
+.project-category {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--primary-light);
+  margin-bottom: 12px;
+}
+
+.project-card h3 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  letter-spacing: -0.3px;
+}
+
+.project-card p {
+  font-size: 15px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  background: rgba(99,102,241,0.1);
+  border: 1px solid rgba(99,102,241,0.2);
+  border-radius: 100px;
+  color: var(--primary-light);
+}
+
+html[data-theme="light"] .tag {
+  background: rgba(99,102,241,0.08);
+  color: var(--primary);
+}
+
+.project-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary-light);
+  margin-top: 16px;
+}
+
+.project-link svg {
+  transition: transform 0.2s ease;
+}
+
+.project-card:hover .project-link svg {
+  transform: translateX(4px);
+}
+
+/* Timeline */
+.timeline {
+  position: relative;
+  padding-left: 40px;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, var(--primary), var(--accent), transparent);
+}
+
+.timeline-item {
+  position: relative;
+  padding-bottom: 48px;
+}
+
+.timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -45px;
+  top: 6px;
+  width: 12px;
+  height: 12px;
+  background: var(--gradient);
+  border-radius: 50%;
+  box-shadow: 0 0 20px rgba(99,102,241,0.4);
+}
+
+.timeline-period {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary-light);
+  margin-bottom: 8px;
+}
+
+.timeline-item h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.timeline-item p {
+  font-size: 15px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* Skills Section */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.skill-group {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+}
+
+.skill-group h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.skill-group h3::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background: var(--gradient);
+  border-radius: 50%;
+}
+
+.skill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.skill-tag {
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+}
+
+.skill-tag:hover {
+  border-color: var(--primary-light);
+  color: var(--text);
+}
+
+/* Certifications */
+.certs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.cert-item {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.2s ease;
+}
+
+.cert-item:hover {
+  border-color: var(--border-hover);
+  background: var(--card-hover);
+}
+
+.cert-icon {
+  width: 40px;
+  height: 40px;
+  background: var(--gradient-subtle);
+  border: 1px solid rgba(99,102,241,0.2);
+  border-radius: var(--radius-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.cert-item span {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Contact Section */
+.contact-section {
+  text-align: center;
+  padding: 120px 0;
+}
+
+.contact-section h2 {
+  font-size: clamp(36px, 5vw, 56px);
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  margin-bottom: 20px;
+}
+
+.contact-section p {
+  font-size: 18px;
+  color: var(--text-muted);
+  max-width: 600px;
+  margin: 0 auto 40px;
+}
+
+.contact-links {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* Footer */
+footer {
+  padding: 40px 0;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+
+footer p {
+  font-size: 14px;
+  color: var(--text-dim);
+}
+
+/* Reveal Animation */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Mobile Menu */
+.mobile-menu-btn {
+  display: none;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+  }
+  
+  .mobile-menu-btn {
+    display: flex;
+  }
+  
+  .hero {
+    padding: 100px 0 60px;
+    min-height: auto;
+  }
+  
+  .philosophy {
+    padding: 40px 24px;
+  }
+  
+  .philosophy-text p {
+    font-size: 17px;
+  }
+  
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .metrics {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  
+  section {
+    padding: 60px 0;
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-hover);
+}
 </style>
-
 </head>
-
 <body>
 
 <nav>
-
-<div class="container nav-inner">
-
-<div class="logo">
-Bikram<span>.</span>
-</div>
-
-<div class="menu">
-
-<a href="#about">About</a>
-<a href="#journey">Journey</a>
-<a href="#projects">Projects</a>
-<a href="#vision">Vision</a>
-<a href="#contact">Contact</a>
-
-<button id="theme" class="theme">☀️</button>
-
-</div>
-
-</div>
-
+  <div class="nav-inner">
+    <div class="logo">Bikram<span>.</span></div>
+    <div class="nav-links">
+      <a href="#philosophy">Philosophy</a>
+      <a href="#projects">Projects</a>
+      <a href="#journey">Journey</a>
+      <a href="#skills">Skills</a>
+      <a href="#contact">Contact</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">☀️</button>
+    </div>
+    <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">☰</button>
+  </div>
 </nav>
 
+<section class="hero">
+  <div class="container">
+    <div class="hero-content reveal">
+      <div class="hero-badge">Available for SRE Leadership Roles</div>
+      <h1>
+        I build <span class="gradient-text">resilient systems</span> that scale beyond human operators.
+      </h1>
+      <p class="hero-subtitle">
+        SRE & Platform Engineering Leader with 13+ years of experience. I lead teams that keep mission-critical infrastructure running for 7M+ users, and I write code in Rust, Go, and Python to automate the toil away.
+      </p>
+      <div class="hero-buttons">
+        <a href="#projects" class="btn btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          View My Work
+        </a>
+        <a href="Bikram_Sarkar_Experian_SRE_Lead_Resume.docx" download="Bikram_Sarkar_SRE_Resume.pdf" class="btn btn-secondary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+          Download Resume
+        </a>
+        <a href="https://linkedin.com/in/bikramsarkar" target="_blank" class="btn btn-ghost">
+          LinkedIn →
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
 <div class="container">
-
-<section class="hero reveal">
-
-<div>
-
-<div class="badge">
-🚀 Building the future of AI Infrastructure
+  <div class="metrics reveal">
+    <div class="metric-card">
+      <div class="metric-value">7M+</div>
+      <div class="metric-label">End Users Served</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">6,000+</div>
+      <div class="metric-label">Virtual Machines</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">95%</div>
+      <div class="metric-label">SLA Achievement</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">10</div>
+      <div class="metric-label">Engineers Led</div>
+    </div>
+  </div>
 </div>
 
-<h1>
-
-I build
-<span class="gradient">distributed systems</span>,
-observability platforms,
-and AI products
-that solve
-real-world engineering problems.
-
-</h1>
-
-<p>
-
-I'm Bikram Sarkar — an Infrastructure & AI Systems Engineer with 13+ years of experience across IT Operations, Cloud Infrastructure, Incident Management, Reliability Engineering, and Platform Design.
-
-</p>
-
-<p>
-
-I'm focused on building production-grade software using Rust, Go, Python, Distributed Systems, LLMs, and Cloud Infrastructure while working toward building a billion-dollar technology company that creates meaningful impact.
-
-</p>
-
-<div class="buttons">
-
-<a class="btn primary" href="https://github.com/sarkarbikram90" target="_blank">
-Explore My Work
-</a>
-
-<a class="btn secondary" href="mailto:sarkarbikram90@email.com">
-Let's Connect
-</a>
-
-</div>
-
-</div>
-
-<div class="profile">
-
-<h3>Current Focus</h3>
-
-<div class="metric">
-<h2>Observability</h2>
-<span>Cloud • Telemetry • OpenTelemetry • Prometheus • Grafana</span>
-</div>
-
-<div class="metric">
-<h2>AI Systems</h2>
-<span>LLMs • RAG • AI Agents • MLOps • Production AI</span>
-</div>
-
-<div class="metric">
-<h2>Systems Programming</h2>
-<span>Rust • Go • Python • PostgreSQL • Kafka</span>
-</div>
-
-<div class="metric">
-<h2>Mission</h2>
-<span>Build software that scales beyond human operators.</span>
-</div>
-
-</div>
-
+<section id="philosophy">
+  <div class="container">
+    <div class="philosophy reveal">
+      <div class="philosophy-text">
+        <p>
+          I didn't begin my career writing software. I began by <strong>solving customer problems</strong> — moved into technical support, then infrastructure operations, incident management, and platform engineering.
+        </p>
+        <p>
+          That journey gave me something many engineers never experience: <strong>a deep understanding of how systems actually fail in production.</strong>
+        </p>
+        <p>
+          Every system I build is designed from that perspective — to reduce operational complexity, automate decision-making, and make distributed systems easier to understand and operate at scale.
+        </p>
+      </div>
+    </div>
+  </div>
 </section>
 
-<section id="about" class="reveal">
-
-<h2 class="section-title">Engineering Philosophy</h2>
-
-<p class="section-sub">
-
-I didn't begin my career writing software.
-
-I began by solving customer problems, moved into technical support, then infrastructure operations, incident management, cloud monitoring, and platform engineering.
-
-That journey gave me something many engineers never experience—
-
-a deep understanding of how systems actually fail in production.
-
-I build software from that perspective.
-
-Every product I create is designed to reduce operational complexity, automate decision making, and make distributed systems easier to understand.
-
-</p>
-
+<section id="projects">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label">Engineering Portfolio</div>
+      <h2 class="section-title">Systems I've Built</h2>
+      <p class="section-desc">
+        Production-grade tools and platforms solving real SRE challenges — from distributed log aggregation to governed AIOps incident triage.
+      </p>
+    </div>
+    
+    <div class="projects-grid">
+      <a href="https://github.com/sarkarbikram90/barnacles" target="_blank" class="project-card reveal">
+        <div class="project-category">Distributed Systems</div>
+        <h3>Barnacles</h3>
+        <p>A lightweight, fault-tolerant, production-grade distributed log aggregation and real-time streaming system. Built to understand the mechanics behind ELK/Kafka at a code level.</p>
+        <div class="project-tags">
+          <span class="tag">Go</span>
+          <span class="tag">Kafka</span>
+          <span class="tag">Distributed Systems</span>
+        </div>
+        <div class="project-link">
+          View on GitHub
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+      
+      <a href="https://github.com/sarkarbikram90/FlowForge" target="_blank" class="project-card reveal">
+        <div class="project-category">Platform Engineering</div>
+        <h3>FlowForge</h3>
+        <p>Cloud-native, Rust-powered distributed workflow orchestrator with HA scheduling, DAG execution, transactional outbox pattern, and NATS JetStream. A modern alternative to legacy schedulers like AutoSys.</p>
+        <div class="project-tags">
+          <span class="tag">Rust</span>
+          <span class="tag">NATS</span>
+          <span class="tag">DAG</span>
+        </div>
+        <div class="project-link">
+          View on GitHub
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+      
+      <a href="https://github.com/sarkarbikram90/Obsygnal-Pulse" target="_blank" class="project-card reveal">
+        <div class="project-category">AI Infrastructure</div>
+        <h3>Obsygnal-Pulse</h3>
+        <p>AI Infrastructure Intelligence Platform to observe, optimize, and automate AI workloads across GPUs, Kubernetes, and distributed training pipelines.</p>
+        <div class="project-tags">
+          <span class="tag">Go</span>
+          <span class="tag">Kubernetes</span>
+          <span class="tag">GPU Observability</span>
+        </div>
+        <div class="project-link">
+          View on GitHub
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+      
+      <a href="https://hitl-incidents-triage-mvp.vercel.app/" target="_blank" class="project-card reveal">
+        <div class="project-category">Governed AIOps</div>
+        <h3>HITL Incident Triage</h3>
+        <p>Client-facing POC combining AI-assisted P1/P2 analysis with L2/L3 approval workflows, SOP-driven runbooks, dry-run/execution separation, and full audit traceability for safe AIOps adoption.</p>
+        <div class="project-tags">
+          <span class="tag">Python</span>
+          <span class="tag">LLMs</span>
+          <span class="tag">HITL</span>
+        </div>
+        <div class="project-link">
+          View Live Demo
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+      
+      <a href="https://ai-driven-incident-investigation.streamlit.app/" target="_blank" class="project-card reveal">
+        <div class="project-category">Observability</div>
+        <h3>AI SRE Copilot</h3>
+        <p>AI-powered incident investigation tool that correlates distributed logs, metrics, and traces to automate Root Cause Analysis and accelerate MTTR during major incidents.</p>
+        <div class="project-tags">
+          <span class="tag">Python</span>
+          <span class="tag">Streamlit</span>
+          <span class="tag">RAG</span>
+        </div>
+        <div class="project-link">
+          Try It Live
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+      
+      <a href="https://github.com/sarkarbikram90/OpenNoteBook" target="_blank" class="project-card reveal">
+        <div class="project-category">Secure AI</div>
+        <h3>OpenNoteBook</h3>
+        <p>Production-quality RAG application using 100% open-source and locally-hosted AI models. Enables secure document Q&A with grounded citations — zero data leaves your infrastructure.</p>
+        <div class="project-tags">
+          <span class="tag">Python</span>
+          <span class="tag">Local LLMs</span>
+          <span class="tag">RAG</span>
+        </div>
+        <div class="project-link">
+          View on GitHub
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+      
+      <a href="https://synthetic-data-generator-for-machine-learning-project.streamlit.app/" target="_blank" class="project-card reveal">
+        <div class="project-category">ML Infrastructure</div>
+        <h3>Synthetic Data Generator</h3>
+        <p>Generates realistic synthetic incident alert datasets to accelerate ML anomaly detection model training and eliminate manual data-gathering toil for data science teams.</p>
+        <div class="project-tags">
+          <span class="tag">Python</span>
+          <span class="tag">Streamlit</span>
+          <span class="tag">ML</span>
+        </div>
+        <div class="project-link">
+          Try It Live
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+      
+      <a href="https://ml-self-heal-hitl.streamlit.app/" target="_blank" class="project-card reveal">
+        <div class="project-category">Self-Healing</div>
+        <h3>ML Self-Healing (HITL)</h3>
+        <p>Machine Learning POC for automated runbook execution with Human-in-the-Loop confidence thresholds. Enables safe, governed auto-remediation of known anomalies.</p>
+        <div class="project-tags">
+          <span class="tag">Python</span>
+          <span class="tag">Automation</span>
+          <span class="tag">SRE</span>
+        </div>
+        <div class="project-link">
+          Try It Live
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+      
+      <a href="https://rpadashboard.streamlit.app/" target="_blank" class="project-card reveal">
+        <div class="project-category">Business Reliability</div>
+        <h3>RPA Observability Dashboard</h3>
+        <p>Custom dashboard monitoring Blue Prism production workflows, providing real-time visibility into digital worker health to prevent business SLA breaches.</p>
+        <div class="project-tags">
+          <span class="tag">Python</span>
+          <span class="tag">Streamlit</span>
+          <span class="tag">RPA</span>
+        </div>
+        <div class="project-link">
+          Try It Live
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+    </div>
+  </div>
 </section>
 
-<section id="journey" class="reveal">
-
-<h2 class="section-title">Career Evolution</h2>
-
-<div class="timeline">
-
-<div class="item">
-
-<h3>Customer Support → Technical Support</h3>
-
-<p>
-Learned empathy, communication, and problem solving under pressure.
-</p>
-
-</div>
-
-<div class="item">
-
-<h3>Infrastructure Operations Lead</h3>
-
-<p>
-
-Led monitoring operations across AWS, Azure, and Google Cloud while managing critical production incidents, reliability initiatives, governance, and operational excellence.
-
-</p>
-
-</div>
-
-<div class="item">
-
-<h3>Software Engineering</h3>
-
-<p>
-
-Building cloud-native applications using Rust, Go, Python, distributed systems, APIs, PostgreSQL, Kafka, and modern software architecture.
-
-</p>
-
-</div>
-
-<div class="item">
-
-<h3>Founder Journey</h3>
-
-<p>
-
-Building products that combine AI, observability, and systems engineering to solve infrastructure challenges at global scale.
-
-</p>
-
-</div>
-
-</div>
-
+<section id="journey">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label">Career Evolution</div>
+      <h2 class="section-title">From Customer Support to SRE Leadership</h2>
+      <p class="section-desc">
+        13+ years of progressive responsibility — from solving customer problems face-to-face to leading reliability operations for millions of users.
+      </p>
+    </div>
+    
+    <div class="timeline reveal">
+      <div class="timeline-item">
+        <div class="timeline-period">Apr 2023 – Present</div>
+        <h3>Technical Lead — Resolve Tech Solutions</h3>
+        <p>Leading a 10-member SRE team supporting 7M+ end users across hybrid-cloud. Defined SLIs/SLOs, drove MTTR reduction by 20%, and pioneered governed AIOps adoption for mission-critical payment gateway APIs.</p>
+      </div>
+      
+      <div class="timeline-item">
+        <div class="timeline-period">Aug 2020 – Mar 2023</div>
+        <h3>Senior Engineer — Wisemen Consulting</h3>
+        <p>Enterprise IT operations and multi-cloud infrastructure monitoring. Developed Python automation for provisioning, log analysis, and incident response workflows.</p>
+      </div>
+      
+      <div class="timeline-item">
+        <div class="timeline-period">Aug 2019 – Aug 2020</div>
+        <h3>Technical Support — Dell Technologies</h3>
+        <p>Advanced enterprise hardware and software support. Automated diagnostic workflows and earned Customer Champion recognition from Director-level leadership.</p>
+      </div>
+      
+      <div class="timeline-item">
+        <div class="timeline-period">Mar 2013 – Aug 2019</div>
+        <h3>Service Desk Analyst — Wipro Technologies</h3>
+        <p>L1/L2 IT support operations covering incident triage, escalation, and resolution. Progressively took on automation initiatives and earned the ENU Excellence Award for a Windows 10 migration project.</p>
+      </div>
+      
+      <div class="timeline-item">
+        <div class="timeline-period">Jun 2012 – Feb 2013</div>
+        <h3>Front Desk Executive — Smart Tech Solutions</h3>
+        <p>First point of contact for customer escalations. Built the foundation for customer-centric thinking and operational discipline that defines my SRE philosophy today.</p>
+      </div>
+    </div>
+  </div>
 </section>
 
-<section id="projects" class="reveal">
-
-<h2 class="section-title">Flagship Projects</h2>
-
-<div class="grid">
-
-<div class="card">
-
-<h3>Obsygnal</h3>
-
-<p>
-
-An AI-native observability platform combining metrics, logs, traces, events, machine learning, and intelligent automation into one unified operating layer.
-
-</p>
-
-<div class="tags">
-
-<div class="tag">Rust</div>
-<div class="tag">Go</div>
-<div class="tag">OpenTelemetry</div>
-<div class="tag">Prometheus</div>
-<div class="tag">Grafana</div>
-<div class="tag">AI</div>
-
-</div>
-
-</div>
-
-<div class="card">
-
-<h3>Orbitlogs</h3>
-
-<p>
-
-A modern satellite mission operations platform with telemetry pipelines, mission dashboards, anomaly detection, and AI-assisted spacecraft operations.
-
-</p>
-
-<div class="tags">
-
-<div class="tag">Rust</div>
-<div class="tag">Kafka</div>
-<div class="tag">Telemetry</div>
-<div class="tag">TimescaleDB</div>
-<div class="tag">Space</div>
-
-</div>
-
-</div>
-
-<div class="card">
-
-<h3>AI SRE Copilot</h3>
-
-<p>
-
-An AI-powered reliability engineer capable of analyzing telemetry, identifying root causes, recommending remediation, and reducing MTTR.
-
-</p>
-
-<div class="tags">
-
-<div class="tag">LLMs</div>
-<div class="tag">Python</div>
-<div class="tag">FastAPI</div>
-<div class="tag">Vector Search</div>
-
-</div>
-
-</div>
-
-<div class="card">
-
-<h3>Rust Workflow Scheduler</h3>
-
-<p>
-
-A distributed workflow orchestration engine focused on reliability, performance, concurrency, and enterprise-grade scheduling.
-
-</p>
-
-<div class="tags">
-
-<div class="tag">Rust</div>
-<div class="tag">Tokio</div>
-<div class="tag">gRPC</div>
-<div class="tag">PostgreSQL</div>
-
-</div>
-
-</div>
-
-<div class="card">
-
-<h3>SecondGradient</h3>
-
-<p>
-
-A long-term research initiative exploring systems thinking, second-order effects, strategic reasoning, AI decision making, and engineering leadership.
-
-</p>
-
-<div class="tags">
-
-<div class="tag">AI</div>
-<div class="tag">Strategy</div>
-<div class="tag">Systems Thinking</div>
-
-</div>
-
-</div>
-
-<div class="card">
-
-<h3>Future Vision</h3>
-
-<p>
-
-Enterprise AI Infrastructure.
-AI Operations.
-Autonomous Systems.
-Developer Platforms.
-Space Technology.
-
-The next decade is just getting started.
-
-</p>
-
-</div>
-
-</div>
-
+<section id="skills">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label">Technical Expertise</div>
+      <h2 class="section-title">Skills & Technologies</h2>
+    </div>
+    
+    <div class="skills-grid reveal">
+      <div class="skill-group">
+        <h3>SRE & Reliability</h3>
+        <div class="skill-tags">
+          <span class="skill-tag">SLI/SLO/SLA</span>
+          <span class="skill-tag">Error Budgets</span>
+          <span class="skill-tag">Toil Reduction</span>
+          <span class="skill-tag">Blameless Postmortems</span>
+          <span class="skill-tag">Runbook Automation</span>
+          <span class="skill-tag">Chaos Engineering</span>
+          <span class="skill-tag">Disaster Recovery</span>
+        </div>
+      </div>
+      
+      <div class="skill-group">
+        <h3>Cloud & Infrastructure</h3>
+        <div class="skill-tags">
+          <span class="skill-tag">AWS</span>
+          <span class="skill-tag">GCP</span>
+          <span class="skill-tag">Azure</span>
+          <span class="skill-tag">Kubernetes</span>
+          <span class="skill-tag">Terraform</span>
+          <span class="skill-tag">Docker</span>
+        </div>
+      </div>
+      
+      <div class="skill-group">
+        <h3>Observability</h3>
+        <div class="skill-tags">
+          <span class="skill-tag">Dynatrace</span>
+          <span class="skill-tag">Prometheus</span>
+          <span class="skill-tag">Grafana</span>
+          <span class="skill-tag">OpenTelemetry</span>
+          <span class="skill-tag">CloudWatch</span>
+          <span class="skill-tag">Azure Monitor</span>
+        </div>
+      </div>
+      
+      <div class="skill-group">
+        <h3>Programming</h3>
+        <div class="skill-tags">
+          <span class="skill-tag">Go</span>
+          <span class="skill-tag">Rust</span>
+          <span class="skill-tag">Python</span>
+          <span class="skill-tag">Bash</span>
+          <span class="skill-tag">SQL</span>
+        </div>
+      </div>
+      
+      <div class="skill-group">
+        <h3>Distributed Systems</h3>
+        <div class="skill-tags">
+          <span class="skill-tag">Apache Kafka</span>
+          <span class="skill-tag">NATS JetStream</span>
+          <span class="skill-tag">gRPC</span>
+          <span class="skill-tag">PostgreSQL</span>
+          <span class="skill-tag">TimescaleDB</span>
+        </div>
+      </div>
+      
+      <div class="skill-group">
+        <h3>AI & AIOps</h3>
+        <div class="skill-tags">
+          <span class="skill-tag">LLMs</span>
+          <span class="skill-tag">RAG</span>
+          <span class="skill-tag">Vector Search</span>
+          <span class="skill-tag">Anomaly Detection</span>
+          <span class="skill-tag">Self-Healing</span>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
-<section id="vision" class="reveal">
-
-<div class="quote">
-
-<h2>
-
-"I don't want to build another application.
-
-I want to build infrastructure that powers the next generation of intelligent systems."
-
-</h2>
-
-</div>
-
+<section>
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label">Credentials</div>
+      <h2 class="section-title">Certifications</h2>
+    </div>
+    
+    <div class="certs-grid reveal">
+      <div class="cert-item">
+        <div class="cert-icon">☁️</div>
+        <span>Google Cloud — Professional ML Engineer</span>
+      </div>
+      <div class="cert-item">
+        <div class="cert-icon">📊</div>
+        <span>Dynatrace Verified — Essentials</span>
+      </div>
+      <div class="cert-item">
+        <div class="cert-icon">⚡</div>
+        <span>Confluent — Apache Kafka Fundamentals</span>
+      </div>
+      <div class="cert-item">
+        <div class="cert-icon">🔧</div>
+        <span>Platform Engineering — Observability</span>
+      </div>
+      <div class="cert-item">
+        <div class="cert-icon">🛡️</div>
+        <span>Coursera — Google SRE Culture</span>
+      </div>
+      <div class="cert-item">
+        <div class="cert-icon">⎈</div>
+        <span>Coursera — GKE Foundations</span>
+      </div>
+      <div class="cert-item">
+        <div class="cert-icon">☁️</div>
+        <span>Coursera — GCP Core Infrastructure</span>
+      </div>
+      <div class="cert-item">
+        <div class="cert-icon">🚀</div>
+        <span>Simplilearn — DevOps Postgraduate</span>
+      </div>
+    </div>
+  </div>
 </section>
 
-<section class="reveal">
-
-<h2 class="section-title">Technology Stack</h2>
-
-<div class="tags">
-
-<div class="tag">Rust</div>
-<div class="tag">Go</div>
-<div class="tag">Python</div>
-<div class="tag">AWS</div>
-<div class="tag">Azure</div>
-<div class="tag">Google Cloud</div>
-<div class="tag">Docker</div>
-<div class="tag">Kubernetes</div>
-<div class="tag">Terraform</div>
-<div class="tag">Prometheus</div>
-<div class="tag">Grafana</div>
-<div class="tag">OpenTelemetry</div>
-<div class="tag">Kafka</div>
-<div class="tag">PostgreSQL</div>
-<div class="tag">TimescaleDB</div>
-<div class="tag">LLMs</div>
-<div class="tag">RAG</div>
-<div class="tag">Distributed Systems</div>
-
-</div>
-
-</section>
-
-<section id="contact" class="reveal">
-
-<h2 class="section-title">Let's Build Something Meaningful</h2>
-
-<p class="section-sub">
-
-I'm always interested in conversations around distributed systems, observability, AI infrastructure, platform engineering, space technology, and ambitious startups solving difficult engineering problems.
-
-</p>
-
-<div class="buttons">
-
-<a class="btn primary" href="mailto:sarkarbikram90@email.com">
-Email Me
-</a>
-
-<a class="btn secondary" href="https://github.com/sarkarbikram90" target="_blank">
-GitHub
-</a>
-
-<a class="btn secondary" href="https://linkedin.com/in/bikramsarkar" target="_blank">
-LinkedIn
-</a>
-
-</div>
-
+<section id="contact" class="contact-section">
+  <div class="container reveal">
+    <h2>Let's Build Something <span class="gradient-text">Resilient</span></h2>
+    <p>
+      I'm interested in conversations about SRE leadership, distributed systems, AIOps, platform engineering, and ambitious infrastructure challenges.
+    </p>
+    <div class="contact-links">
+      <a href="mailto:sarkarbikram90@gmail.com" class="btn btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Email Me
+      </a>
+      <a href="https://linkedin.com/in/bikramsarkar" target="_blank" class="btn btn-secondary">LinkedIn</a>
+      <a href="https://github.com/sarkarbikram90" target="_blank" class="btn btn-secondary">GitHub</a>
+      <a href="https://medium.com/@bikramsarkar" target="_blank" class="btn btn-secondary">Medium</a>
+      <a href="Bikram_Sarkar_Experian_SRE_Lead_Resume.docx" download="Bikram_Sarkar_SRE_Resume.pdf" class="btn btn-secondary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+        Download Resume
+      </a>
+    </div>
+  </div>
 </section>
 
 <footer>
-
-© 2026 Bikram Sarkar
-
-<br><br>
-
-Building software that helps humanity scale.
-
+  <div class="container">
+    <p>© 2026 Bikram Sarkar · Building systems that help humanity scale.</p>
+  </div>
 </footer>
 
-</div>
-
 <script>
+// Theme Toggle
+const themeToggle = document.getElementById('themeToggle');
+const html = document.documentElement;
 
-const theme=document.getElementById("theme");
+const savedTheme = localStorage.getItem('theme') || 'dark';
+html.setAttribute('data-theme', savedTheme);
+themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
 
-theme.onclick=()=>{
-
-const html=document.documentElement;
-
-const current=html.getAttribute("data-theme");
-
-html.setAttribute("data-theme",current==="dark"?"light":"dark");
-
-theme.innerHTML=current==="dark"?"🌙":"☀️";
-
-};
-
-const observer=new IntersectionObserver(entries=>{
-
-entries.forEach(entry=>{
-
-if(entry.isIntersecting){
-
-entry.target.classList.add("visible");
-
-}
-
+themeToggle.addEventListener('click', () => {
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  themeToggle.textContent = next === 'dark' ? '☀️' : '🌙';
 });
 
-},{threshold:.15});
+// Mobile Menu
+const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+const navLinks = document.querySelector('.nav-links');
+let menuOpen = false;
 
-document.querySelectorAll(".reveal").forEach(el=>observer.observe(el));
+mobileMenuBtn.addEventListener('click', () => {
+  menuOpen = !menuOpen;
+  if (menuOpen) {
+    navLinks.style.display = 'flex';
+    navLinks.style.flexDirection = 'column';
+    navLinks.style.position = 'absolute';
+    navLinks.style.top = '72px';
+    navLinks.style.left = '0';
+    navLinks.style.right = '0';
+    navLinks.style.background = 'var(--bg-elevated)';
+    navLinks.style.padding = '24px';
+    navLinks.style.borderBottom = '1px solid var(--border)';
+    mobileMenuBtn.textContent = '✕';
+  } else {
+    navLinks.style.display = '';
+    navLinks.style.flexDirection = '';
+    navLinks.style.position = '';
+    navLinks.style.top = '';
+    navLinks.style.left = '';
+    navLinks.style.right = '';
+    navLinks.style.background = '';
+    navLinks.style.padding = '';
+    navLinks.style.borderBottom = '';
+    mobileMenuBtn.textContent = '☰';
+  }
+});
 
+// Close mobile menu on link click
+document.querySelectorAll('.nav-links a').forEach(link => {
+  link.addEventListener('click', () => {
+    if (window.innerWidth <= 768) {
+      mobileMenuBtn.click();
+    }
+  });
+});
+
+// Scroll Reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+});
 </script>
 
 </body>
