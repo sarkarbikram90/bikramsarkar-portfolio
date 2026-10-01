@@ -212,8 +212,95 @@ html[data-theme="light"] .theme-toggle .moon-icon {
   padding: 130px 0 80px;
 }
 
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 56px;
+  align-items: center;
+}
+
 .hero-content {
-  max-width: 950px;
+  max-width: 100%;
+}
+
+.hero-image-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.hero-image-card {
+  position: relative;
+  width: 100%;
+  max-width: 360px;
+  border-radius: 28px;
+  padding: 8px;
+  background: linear-gradient(135deg, rgba(99,102,241,0.35) 0%, rgba(34,211,238,0.25) 50%, rgba(99,102,241,0.15) 100%);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), 0 0 40px rgba(99,102,241,0.2);
+  transition: all 0.3s ease;
+}
+
+.hero-image-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5), 0 0 50px rgba(99,102,241,0.3);
+}
+
+.hero-image-inner {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--card);
+  position: relative;
+}
+
+.hero-image-inner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 15%;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.hero-image-card:hover .hero-image-inner img {
+  transform: scale(1.03);
+}
+
+.hero-image-badge {
+  position: absolute;
+  bottom: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(18, 18, 26, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  padding: 8px 18px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+html[data-theme="light"] .hero-image-badge {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(0,0,0,0.12);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.hero-image-badge .badge-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--success);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--success);
 }
 
 .hero-badge {
@@ -1029,6 +1116,22 @@ footer p {
 }
 
 /* Responsive */
+@media (max-width: 992px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 48px;
+    text-align: left;
+  }
+  
+  .hero-image-wrap {
+    order: -1;
+  }
+  
+  .hero-image-card {
+    max-width: 300px;
+  }
+}
+
 @media (max-width: 768px) {
   .nav-links {
     display: none;
@@ -1122,39 +1225,53 @@ footer p {
 
 <section class="hero">
   <div class="container">
-    <div class="hero-content reveal">
-      <div class="hero-badge">IT Operations & Major Incident Leader • 24×7 Offshore Delivery</div>
-      <h1>
-        Directing 24×7 Command Centers & building <span class="gradient-text">resilient systems</span> that scale.
-      </h1>
-      <p class="hero-subtitle">
-        Production Support & IT Operations Leader with 13+ years of experience (6+ in 24×7 production support, 5+ in people management) directing an offshore Command Center for highly regulated digital platforms serving 7M+ end users. Single accountable leader for Tier 1/Tier 2 stability, Sev-1/Sev-2 incident command, cross-tower escalation, and AI-driven operations.
-      </p>
-      
-      <div class="hero-meta-bar">
-        <span class="hero-meta-item">
-          📍 Hyderabad, India
-        </span>
-        <span class="hero-meta-item">
-          ✉️ <a href="mailto:Sarkarbikram90@gmail.com">Sarkarbikram90@gmail.com</a>
-        </span>
-        <span class="hero-meta-item">
-          📞 <a href="tel:+919832592492">+91 98325-92492</a>
-        </span>
+    <div class="hero-grid">
+      <div class="hero-content reveal">
+        <div class="hero-badge">IT Operations & Major Incident Leader • 24×7 Offshore Delivery</div>
+        <h1>
+          Directing 24×7 Command Centers & building <span class="gradient-text">resilient systems</span> that scale.
+        </h1>
+        <p class="hero-subtitle">
+          Production Support & IT Operations Leader with 13+ years of experience (6+ in 24×7 production support, 5+ in people management) directing an offshore Command Center for highly regulated digital platforms serving 7M+ end users. Single accountable leader for Tier 1/Tier 2 stability, Sev-1/Sev-2 incident command, cross-tower escalation, and AI-driven operations.
+        </p>
+        
+        <div class="hero-meta-bar">
+          <span class="hero-meta-item">
+            📍 Hyderabad, India
+          </span>
+          <span class="hero-meta-item">
+            ✉️ <a href="mailto:Sarkarbikram90@gmail.com">Sarkarbikram90@gmail.com</a>
+          </span>
+          <span class="hero-meta-item">
+            📞 <a href="tel:+919832592492">+91 98325-92492</a>
+          </span>
+        </div>
+
+        <div class="hero-buttons">
+          <a href="#projects" class="btn btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            View Engineering Projects
+          </a>
+          <a href="Bikram_Sarkar_Resume.pdf" download="Bikram_Sarkar_Resume.pdf" class="btn btn-secondary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+            Download Resume (PDF)
+          </a>
+          <a href="https://linkedin.com/in/bikramsarkar" target="_blank" class="btn btn-ghost">
+            LinkedIn →
+          </a>
+        </div>
       </div>
 
-      <div class="hero-buttons">
-        <a href="#projects" class="btn btn-primary">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-          View Engineering Projects
-        </a>
-        <a href="Bikram_Sarkar_Resume.pdf" download="Bikram_Sarkar_Resume.pdf" class="btn btn-secondary">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-          Download Resume (PDF)
-        </a>
-        <a href="https://linkedin.com/in/bikramsarkar" target="_blank" class="btn btn-ghost">
-          LinkedIn →
-        </a>
+      <div class="hero-image-wrap reveal">
+        <div class="hero-image-card">
+          <div class="hero-image-inner">
+            <img src="profile.jpg" alt="Bikram Sarkar - IT Operations & Major Incident Leader" loading="eager">
+          </div>
+          <div class="hero-image-badge">
+            <span class="badge-dot"></span>
+            <span>24×7 Operations Leader</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
