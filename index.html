@@ -167,13 +167,41 @@ html[data-theme="light"] nav {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
-  transition: all 0.2s ease;
+  transition: all 0.25s ease;
+  padding: 0;
 }
 
 .theme-toggle:hover {
-  border-color: var(--border-hover);
+  border-color: var(--primary-light);
   background: var(--card-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(99,102,241,0.25);
+}
+
+.theme-toggle svg {
+  transition: transform 0.3s ease, stroke 0.2s ease;
+}
+
+.theme-toggle:hover svg {
+  transform: rotate(15deg) scale(1.08);
+}
+
+html[data-theme="dark"] .theme-toggle .sun-icon {
+  display: block;
+  stroke: #f59e0b;
+}
+
+html[data-theme="dark"] .theme-toggle .moon-icon {
+  display: none;
+}
+
+html[data-theme="light"] .theme-toggle .sun-icon {
+  display: none;
+}
+
+html[data-theme="light"] .theme-toggle .moon-icon {
+  display: block;
+  stroke: #6366f1;
 }
 
 /* Hero Section */
@@ -1069,7 +1097,24 @@ footer p {
       <a href="#awards">Awards</a>
       <a href="#credentials">Credentials</a>
       <a href="#contact">Contact</a>
-      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">☀️</button>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle light and dark theme" title="Toggle theme">
+        <!-- Sun icon shown in dark theme -->
+        <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <!-- Moon icon shown in light theme -->
+        <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
     </div>
     <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">☰</button>
   </div>
@@ -1737,14 +1782,16 @@ const html = document.documentElement;
 
 const savedTheme = localStorage.getItem('theme') || 'dark';
 html.setAttribute('data-theme', savedTheme);
-themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+themeToggle.setAttribute('aria-label', savedTheme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+themeToggle.setAttribute('title', savedTheme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
 
 themeToggle.addEventListener('click', () => {
   const current = html.getAttribute('data-theme');
   const next = current === 'dark' ? 'light' : 'dark';
   html.setAttribute('data-theme', next);
   localStorage.setItem('theme', next);
-  themeToggle.textContent = next === 'dark' ? '☀️' : '🌙';
+  themeToggle.setAttribute('aria-label', next === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+  themeToggle.setAttribute('title', next === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
 });
 
 // Mobile Menu
