@@ -931,60 +931,126 @@ html[data-theme="light"] .tag {
 /* Certifications */
 .certs-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 18px;
 }
 
 .cert-item {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
-  padding: 18px 22px;
+  padding: 20px 22px;
   display: flex;
-  align-items: center;
-  gap: 14px;
-  transition: all 0.2s ease;
+  align-items: flex-start;
+  gap: 16px;
+  transition: all 0.25s ease;
 }
 
 .cert-item:hover {
-  border-color: var(--border-hover);
+  border-color: var(--primary-light);
   background: var(--card-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+}
+
+.cert-item-featured {
+  grid-column: 1 / -1;
+  background: linear-gradient(135deg, rgba(99,102,241,0.08) 0%, rgba(34,211,238,0.05) 100%), var(--card);
+  border-color: rgba(99,102,241,0.35);
+}
+
+.cert-item-featured:hover {
+  border-color: var(--accent);
+  box-shadow: 0 6px 24px rgba(34,211,238,0.18);
 }
 
 .cert-icon {
-  width: 38px;
-  height: 38px;
+  width: 42px;
+  height: 42px;
   background: var(--gradient-subtle);
-  border: 1px solid rgba(99,102,241,0.2);
+  border: 1px solid rgba(99,102,241,0.25);
   border-radius: var(--radius-xs);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: 20px;
   flex-shrink: 0;
 }
 
-.cert-item span {
+.cert-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex-grow: 1;
+}
+
+.cert-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.cert-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.2px;
+}
+
+.cert-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 100px;
+  background: rgba(34, 211, 238, 0.12);
+  border: 1px solid rgba(34, 211, 238, 0.3);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--accent);
+}
+
+.cert-badge-pill::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: pulse 2s infinite;
+}
+
+.cert-desc {
   font-size: 13.5px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-top: 4px;
+}
+
+.cert-issuer {
+  font-size: 12.5px;
+  color: var(--text-dim);
   font-weight: 500;
 }
 
 /* Education */
 .education-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
   gap: 20px;
-  margin-top: 40px;
 }
 
 .edu-card {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 24px 28px;
+  padding: 26px 28px;
   display: flex;
   align-items: flex-start;
-  gap: 18px;
+  gap: 20px;
   transition: all 0.3s ease;
 }
 
@@ -995,10 +1061,10 @@ html[data-theme="light"] .tag {
 }
 
 .edu-icon {
-  width: 44px;
-  height: 44px;
+  width: 46px;
+  height: 46px;
   background: var(--gradient-subtle);
-  border: 1px solid rgba(99,102,241,0.2);
+  border: 1px solid rgba(99,102,241,0.25);
   border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
@@ -1007,23 +1073,35 @@ html[data-theme="light"] .tag {
   flex-shrink: 0;
 }
 
+.edu-content {
+  flex-grow: 1;
+}
+
 .edu-content h3 {
-  font-size: 17px;
+  font-size: 17.5px;
   font-weight: 700;
   margin-bottom: 4px;
+  letter-spacing: -0.2px;
 }
 
 .edu-institution {
   font-size: 14px;
   color: var(--primary-light);
   font-weight: 600;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
 }
 
 .edu-year {
   font-size: 13px;
   color: var(--text-dim);
   font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.edu-desc {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  line-height: 1.6;
 }
 
 /* Contact Section */
@@ -1237,7 +1315,8 @@ footer p {
       <a href="#projects">Projects</a>
       <a href="#skills">Skills</a>
       <a href="#awards">Awards</a>
-      <a href="#credentials">Credentials</a>
+      <a href="#certifications">Certifications</a>
+      <a href="#education">Education</a>
       <a href="#contact">Contact</a>
       <button class="theme-toggle" id="themeToggle" aria-label="Toggle light and dark theme" title="Toggle theme">
         <!-- Sun icon shown in dark theme -->
@@ -1841,41 +1920,92 @@ footer p {
   </div>
 </section>
 
-<section id="credentials">
+<section id="certifications">
   <div class="container">
     <div class="section-header reveal">
       <div class="section-label">Continuous Learning</div>
-      <h2 class="section-title">Certifications & Education</h2>
+      <h2 class="section-title">Certifications & Professional Development</h2>
+      <p class="section-desc">
+        Industry-recognized credentials in cloud machine learning, observability, platform reliability, and ongoing specialization in cloud-native container orchestration.
+      </p>
     </div>
     
     <div class="certs-grid reveal">
+      <div class="cert-item cert-item-featured">
+        <div class="cert-icon">☸️</div>
+        <div class="cert-info">
+          <div class="cert-title-row">
+            <span class="cert-name">Certified Kubernetes Administrator (CKA)</span>
+            <span class="cert-badge-pill">In Preparation</span>
+          </div>
+          <div class="cert-desc">
+            Actively preparing for the Linux Foundation &amp; Cloud Native Computing Foundation (CNCF) Certified Kubernetes Administrator examination — advancing hands-on expertise in production-grade cluster architecture, multi-node networking, ingress controllers, persistent storage management, troubleshooting, and enterprise security hardening.
+          </div>
+          <div class="cert-issuer">Linux Foundation &amp; Cloud Native Computing Foundation (CNCF)</div>
+        </div>
+      </div>
+
       <div class="cert-item">
         <div class="cert-icon">☁️</div>
-        <span>Google Cloud Certified — Professional Machine Learning Engineer</span>
+        <div class="cert-info">
+          <span class="cert-name">Professional Machine Learning Engineer</span>
+          <div class="cert-issuer">Google Cloud Certified</div>
+        </div>
       </div>
+
       <div class="cert-item">
         <div class="cert-icon">📊</div>
-        <span>Dynatrace Verified — Essentials</span>
+        <div class="cert-info">
+          <span class="cert-name">Dynatrace Verified — Essentials</span>
+          <div class="cert-issuer">Dynatrace</div>
+        </div>
       </div>
-      <div class="cert-item">
-        <div class="cert-icon">⎈</div>
-        <span>Udemy — Kubernetes Administration</span>
-      </div>
+
       <div class="cert-item">
         <div class="cert-icon">⚡</div>
-        <span>Confluent — Apache Kafka Fundamentals</span>
+        <div class="cert-info">
+          <span class="cert-name">Apache Kafka Fundamentals</span>
+          <div class="cert-issuer">Confluent</div>
+        </div>
       </div>
+
       <div class="cert-item">
         <div class="cert-icon">🛡️</div>
-        <span>Developing a Google SRE Culture | Observability for Platform Engineering</span>
+        <div class="cert-info">
+          <span class="cert-name">Developing a Google SRE Culture | Observability for Platform Engineering</span>
+          <div class="cert-issuer">Google Cloud / Coursera</div>
+        </div>
       </div>
+
       <div class="cert-item">
         <div class="cert-icon">🚀</div>
-        <span>Simplilearn — Postgraduate Program in DevOps</span>
+        <div class="cert-info">
+          <span class="cert-name">Postgraduate Program in DevOps</span>
+          <div class="cert-issuer">Simplilearn</div>
+        </div>
+      </div>
+
+      <div class="cert-item">
+        <div class="cert-icon">⎈</div>
+        <div class="cert-info">
+          <span class="cert-name">Kubernetes Administration</span>
+          <div class="cert-issuer">Udemy</div>
+        </div>
       </div>
     </div>
+  </div>
+</section>
 
-    <!-- Education Section -->
+<section id="education">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label">Academic Foundations</div>
+      <h2 class="section-title">Education</h2>
+      <p class="section-desc">
+        Formal academic education in computer applications, distributed software systems, and commercial analytical disciplines.
+      </p>
+    </div>
+
     <div class="education-grid reveal">
       <div class="edu-card">
         <div class="edu-icon">🎓</div>
@@ -1883,18 +2013,20 @@ footer p {
           <h3>Master of Computer Applications (MCA)</h3>
           <div class="edu-institution">University of Mysore</div>
           <div class="edu-year">Graduated 2024</div>
+          <p class="edu-desc">Postgraduate curriculum specializing in advanced software engineering, distributed database management, object-oriented systems design, and enterprise computing architectures.</p>
         </div>
       </div>
+
       <div class="edu-card">
         <div class="edu-icon">📜</div>
         <div class="edu-content">
           <h3>Bachelor of Commerce (B.Com)</h3>
           <div class="edu-institution">University of North Bengal</div>
           <div class="edu-year">Graduated 2011</div>
+          <p class="edu-desc">Undergraduate degree establishing foundational analytical thinking, quantitative reasoning, and business operational principles.</p>
         </div>
       </div>
     </div>
-
   </div>
 </section>
 
