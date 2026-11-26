@@ -67,7 +67,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build & load image for pre-publish verification
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: deploy/docker/Dockerfile
@@ -133,7 +133,7 @@ jobs:
 
       - name: Push immutable container image to Artifact Registry
         id: push
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: deploy/docker/Dockerfile
