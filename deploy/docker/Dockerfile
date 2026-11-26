@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.7
 
-FROM nginxinc/nginx-unprivileged:1.28-alpine
+FROM nginxinc/nginx-unprivileged:1.31-alpine
 
 LABEL org.opencontainers.image.title="Bikram Sarkar Portfolio" \
       org.opencontainers.image.description="Hardened non-root static portfolio served by Nginx on GKE Autopilot" \
