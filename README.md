@@ -35,6 +35,7 @@ flowchart LR
 | [SLO Policy](docs/slo-policy.md) | `99.9%` rolling 30-day availability SLO (`43.2m` budget), multi-window burn-rate alerts, DORA metrics |
 | [Incident Runbooks](docs/runbooks/) | Alert-linked runbooks: [Site Unavailable](docs/runbooks/site-unavailable.md), [SLO Burn](docs/runbooks/slo-error-budget-burn.md), [CrashLoop & Rollback](docs/runbooks/pod-crashloop-and-rollback.md), [5xx & Gateway](docs/runbooks/http-5xx-and-gateway.md) |
 | [Chaos & Recovery Drills](docs/drills/chaos-and-recovery-drills.md) | Drift self-healing, zero-downtime pod eviction, GitOps rollback, Cosign verification, and DR rebuild |
+| [Live Production Evidence](docs/evidence/README.md) | Post-deploy verification log (Binary Authorization block proof, Cloud Trace waterfall, GameDay MTTR, Month-1 FinOps actuals) |
 | [BigQuery Queries](docs/analytics-queries.sql) | Partition-pruned visitor summary, referral domains, device split, and hourly anomaly detection |
 
 ## Repository Layout
@@ -42,7 +43,9 @@ flowchart LR
 ```text
 bikramsarkar-portfolio/
 ├── index.html, 404.html, profile.png, assets/   # Static portfolio (root keeps GitHub Pages live until DNS cutover)
-├── services/analytics-api/                      # Go + OpenTelemetry privacy-first visitor analytics microservice
+├── services/
+│   ├── analytics-api/                           # Go + OpenTelemetry privacy-first visitor analytics microservice
+│   └── digest-job/                              # Go serverless Cloud Run Job (BigQuery daily digest + 3-sigma spike alert)
 ├── deploy/
 │   ├── docker/                                  # Hardened non-root Nginx Dockerfile & JSON logging / CSP configs
 │   ├── charts/portfolio/                        # Helm v2 chart (Gateway API, HealthCheckPolicy, PDB, NetPol, GMP)
@@ -50,10 +53,10 @@ bikramsarkar-portfolio/
 │   └── gitops/                                  # Lean Argo CD bootstrap, scoped AppProject & App-of-Apps prod values
 ├── infra/terraform/
 │   ├── bootstrap/                               # One-time versioned GCS state bucket script
-│   ├── modules/                                 # networking, gke-autopilot, artifact-registry, cert-manager, wif, budget, observability, analytics-pipeline
+│   ├── modules/                                 # networking, gke-autopilot, artifact-registry, cert-manager, wif, binary-authorization, budget, observability, analytics-pipeline, digest-scheduler
 │   └── environments/prod/                       # Production us-central1 wiring + multi-platform provider lock
-├── .github/                                     # Path-filtered ci.yaml, release.yaml, terraform-plan.yaml, dependabot.yml
-└── docs/                                        # ADRs, Threat Model, SLO Policy, Runbooks, Drills, BigQuery SQL
+├── .github/                                     # SHA-pinned ci.yaml, matrix release.yaml, terraform-plan.yaml, dependabot.yml
+└── docs/                                        # ADRs, Threat Model, SLO Policy, Runbooks, Drills, Evidence Log, BigQuery SQL
 ```
 
 ## Implementation Roadmap
@@ -124,7 +127,7 @@ trivy config --exit-code 1 infra/terraform
    ```
 2. **Configure DNS validation & GitHub Repository Variables**:
    - Add `terraform output dns_authorization_cname` at your DNS registrar so Certificate Manager issues the TLS certificate.
-   - Set GitHub Actions Repository Variables (`GCP_PROJECT_ID`, `GCP_WIF_PROVIDER`, `GCP_CI_SERVICE_ACCOUNT`, `GAR_LOCATION`, `GAR_REPOSITORY`) and enable **Allow GitHub Actions to create and approve pull requests**.
+   - Set GitHub Actions Repository Variables (`GCP_PROJECT_ID`, `GCP_WIF_PROVIDER`, `GCP_CI_SERVICE_ACCOUNT`, `BINAUTHZ_ATTESTOR`, `BINAUTHZ_KMS_KEY_VERSION`, `GAR_LOCATION`, `GAR_REPOSITORY`) and enable **Allow GitHub Actions to create and approve pull requests**.
    - Update `PROJECT_ID` placeholders in `deploy/gitops/envs/prod/values-portfolio.yaml` and `values-analytics-api.yaml`.
 3. **Bootstrap lean Argo CD & cut over DNS**:
    ```bash

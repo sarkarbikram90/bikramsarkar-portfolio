@@ -56,8 +56,8 @@ variable "release_channel" {
 
 variable "binary_authorization_mode" {
   type        = string
-  description = "Binary Authorization mode (DISABLED in Phase 2; enable in Phase 3 after attestor setup)."
-  default     = "DISABLED"
+  description = "Binary Authorization mode (PROJECT_SINGLETON_POLICY_ENFORCE blocks unattested custom images)."
+  default     = "PROJECT_SINGLETON_POLICY_ENFORCE"
 }
 
 variable "deletion_protection" {
@@ -87,6 +87,19 @@ variable "alert_email" {
 variable "alert_webhook_url" {
   type        = string
   description = "Webhook URL for real-time Cloud Monitoring alerts (optional)."
+  default     = ""
+  sensitive   = true
+}
+
+variable "digest_job_image" {
+  type        = string
+  description = "Immutable Artifact Registry URI@sha256 for digest-job Cloud Run Job (set after first CI push)."
+  default     = ""
+}
+
+variable "digest_webhook_url" {
+  type        = string
+  description = "Optional Google Chat / Slack webhook URL for the daily visitor digest."
   default     = ""
   sensitive   = true
 }

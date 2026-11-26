@@ -3,15 +3,20 @@ locals {
     "artifactregistry.googleapis.com",
     "bigquery.googleapis.com",
     "billingbudgets.googleapis.com",
+    "binaryauthorization.googleapis.com",
     "certificatemanager.googleapis.com",
+    "cloudkms.googleapis.com",
+    "cloudscheduler.googleapis.com",
     "cloudtrace.googleapis.com",
     "compute.googleapis.com",
     "container.googleapis.com",
+    "containeranalysis.googleapis.com",
     "iam.googleapis.com",
     "iamcredentials.googleapis.com",
     "logging.googleapis.com",
     "monitoring.googleapis.com",
     "pubsub.googleapis.com",
+    "run.googleapis.com",
     "telemetry.googleapis.com",
   ])
 
@@ -138,4 +143,33 @@ module "analytics_pipeline" {
   labels              = local.common_labels
 
   depends_on = [google_project_service.required]
+}
+
+module "binary_authorization" {
+  source = "../../modules/binary-authorization"
+
+  project_id               = var.project_id
+  region                   = var.region
+  name_prefix              = "portfolio"
+  ci_service_account_email = module.workload_identity_github.service_account_email
+  labels                   = local.common_labels
+
+  depends_on = [google_project_service.required]
+}
+
+module "digest_scheduler" {
+  source = "../../modules/digest-scheduler"
+
+  project_id          = var.project_id
+  region              = var.region
+  bigquery_dataset_id = "portfolio_analytics"
+  bigquery_table_id   = "visitor_events"
+  digest_image        = var.digest_job_image
+  digest_webhook_url  = var.digest_webhook_url
+  labels              = local.common_labels
+
+  depends_on = [
+    google_project_service.required,
+    module.analytics_pipeline,
+  ]
 }

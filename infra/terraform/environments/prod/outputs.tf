@@ -67,3 +67,18 @@ output "analytics_workload_sa_email" {
   description = "GCP Service Account email to annotate on the analytics-api Kubernetes ServiceAccount."
   value       = module.analytics_pipeline.analytics_service_account_email
 }
+
+output "binauthz_attestor_name" {
+  description = "Binary Authorization attestor name for GitHub Actions BINAUTHZ_ATTESTOR variable."
+  value       = module.binary_authorization.attestor_name
+}
+
+output "binauthz_kms_key_version" {
+  description = "Cloud KMS key version ID for GitHub Actions BINAUTHZ_KMS_KEY_VERSION variable."
+  value       = module.binary_authorization.kms_key_version_id
+}
+
+output "digest_job_name" {
+  description = "Cloud Run v2 daily visitor digest job name (null until digest_job_image is set)."
+  value       = module.digest_scheduler.digest_job_name
+}

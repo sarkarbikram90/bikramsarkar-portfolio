@@ -22,5 +22,9 @@ monthly_budget_usd = 60
 alert_email       = ""
 alert_webhook_url = ""
 
+# Optional: set digest_job_image after the first CI push to enable the Cloud Run + Cloud Scheduler daily digest
+digest_job_image   = ""
+digest_webhook_url = ""
+
 # Set to false temporarily only if you intentionally want to run `terraform destroy`
 deletion_protection = true

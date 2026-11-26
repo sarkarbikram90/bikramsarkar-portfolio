@@ -1,9 +1,9 @@
-name: Build, Sign & Promote Release
+name: Build, Sign, Attest & Promote Release
 
 on:
   push:
     branches: [main]
-    # Strict path allowlist: GitOps PR merges under deploy/gitops/** NEVER trigger a new build loop.
+    # Strict path allowlist: GitOps PR merges under deploy/gitops/** NEVER trigger a build loop.
     paths:
       - "index.html"
       - "404.html"
@@ -12,23 +12,107 @@ on:
       - "Bikram_Sarkar_DevOps_SRE_Resume.pdf"
       - "assets/**"
       - "deploy/docker/**"
+      - "services/analytics-api/**"
+      - "services/digest-job/**"
   workflow_dispatch:
+    inputs:
+      target:
+        description: "Service(s) to build and release"
+        required: true
+        default: "all"
+        type: choice
+        options:
+          - all
+          - portfolio
+          - analytics-api
+          - digest-job
 
 permissions: {}
 
 concurrency:
-  group: release-portfolio
+  group: release-portfolio-ops
   cancel-in-progress: false
 
 env:
   GAR_LOCATION: ${{ vars.GAR_LOCATION || 'us-central1' }}
   GAR_REPOSITORY: ${{ vars.GAR_REPOSITORY || 'portfolio-images' }}
-  IMAGE_NAME: portfolio
 
 jobs:
-  build-sign-and-promote:
-    name: Build, Scan, SBOM, Sign & Open GitOps PR
+  detect-targets:
+    name: Determine Changed Release Targets
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+      has_targets: ${{ steps.plan.outputs.has_targets }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 2
+
+      - name: Compute changed service matrix
+        id: plan
+        run: |
+          TARGETS=()
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            REQ="${{ inputs.target }}"
+            if [ "$REQ" = "all" ]; then
+              TARGETS=("portfolio" "analytics-api" "digest-job")
+            else
+              TARGETS=("$REQ")
+            fi
+          else
+            CHANGED="$(git diff --name-only HEAD~1 HEAD 2>/dev/null || echo 'index.html')"
+            if echo "$CHANGED" | grep -qE '^(index\.html|404\.html|profile\.png|favicon\.|Bikram_Sarkar_DevOps_SRE_Resume\.pdf|assets/|deploy/docker/)'; then
+              TARGETS+=("portfolio")
+            fi
+            if echo "$CHANGED" | grep -qE '^services/analytics-api/'; then
+              TARGETS+=("analytics-api")
+            fi
+            if echo "$CHANGED" | grep -qE '^services/digest-job/'; then
+              TARGETS+=("digest-job")
+            fi
+          fi
+
+          if [ "${#TARGETS[@]}" -eq 0 ]; then
+            echo "has_targets=false" >> "$GITHUB_OUTPUT"
+            echo "matrix=[]" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          JSON="["
+          SEP=""
+          for t in "${TARGETS[@]}"; do
+            case "$t" in
+              portfolio)
+                ENTRY='{"name":"portfolio","context":".","dockerfile":"deploy/docker/Dockerfile","chart":"deploy/charts/portfolio","gitops_values":"deploy/gitops/envs/prod/values-portfolio.yaml"}'
+                ;;
+              analytics-api)
+                ENTRY='{"name":"analytics-api","context":"services/analytics-api","dockerfile":"services/analytics-api/Dockerfile","chart":"deploy/charts/analytics-api","gitops_values":"deploy/gitops/envs/prod/values-analytics-api.yaml"}'
+                ;;
+              digest-job)
+                ENTRY='{"name":"digest-job","context":"services/digest-job","dockerfile":"services/digest-job/Dockerfile","chart":"","gitops_values":""}'
+                ;;
+            esac
+            JSON="${JSON}${SEP}${ENTRY}"
+            SEP=","
+          done
+          JSON="${JSON}]"
+
+          echo "has_targets=true" >> "$GITHUB_OUTPUT"
+          echo "matrix=${JSON}" >> "$GITHUB_OUTPUT"
+
+  build-sign-and-promote:
+    name: Release ${{ matrix.name }}
+    needs: detect-targets
+    if: needs.detect-targets.outputs.has_targets == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJson(needs.detect-targets.outputs.matrix) }}
     permissions:
       contents: write
       pull-requests: write
@@ -36,7 +120,7 @@ jobs:
       security-events: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Verify required GCP repository variables
         run: |
@@ -55,7 +139,7 @@ jobs:
         id: meta
         run: |
           SHORT_SHA="${GITHUB_SHA::7}"
-          REPO_URI="${GAR_LOCATION}-docker.pkg.dev/${GCP_PROJECT_ID}/${GAR_REPOSITORY}/${IMAGE_NAME}"
+          REPO_URI="${GAR_LOCATION}-docker.pkg.dev/${GCP_PROJECT_ID}/${GAR_REPOSITORY}/${{ matrix.name }}"
           TAG="sha-${SHORT_SHA}"
           echo "short_sha=${SHORT_SHA}" >> "$GITHUB_OUTPUT"
           echo "repo_uri=${REPO_URI}" >> "$GITHUB_OUTPUT"
@@ -64,21 +148,22 @@ jobs:
           GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
 
       - name: Build & load image for pre-publish verification
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
         with:
-          context: .
-          file: deploy/docker/Dockerfile
+          context: ${{ matrix.context }}
+          file: ${{ matrix.dockerfile }}
           load: true
-          tags: portfolio:release-check
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          tags: ${{ matrix.name }}:release-check
+          cache-from: type=gha,scope=${{ matrix.name }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.name }}
 
-      - name: Run read-only smoke test before publishing
+      - name: Run read-only smoke test (portfolio)
+        if: matrix.name == 'portfolio'
         run: |
-          docker run --rm -d --name portfolio-rel \
+          docker run --rm -d --name rel-portfolio \
             --read-only \
             --cap-drop=ALL \
             --security-opt=no-new-privileges:true \
@@ -86,46 +171,56 @@ jobs:
             --tmpfs /var/cache/nginx:rw,noexec,nosuid,size=16m \
             -p 127.0.0.1:8080:8080 \
             portfolio:release-check
-
-          trap 'docker rm -f portfolio-rel || true' EXIT
-
-          for i in $(seq 1 15); do
-            if curl -fsS http://127.0.0.1:8080/healthz | grep -qx "ok"; then
-              break
-            fi
-            sleep 1
-          done
-
+          trap 'docker rm -f rel-portfolio || true' EXIT
+          for i in $(seq 1 15); do curl -fsS http://127.0.0.1:8080/healthz | grep -qx "ok" && break; sleep 1; done
           test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8080/)" -eq 200
           test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8080/profile.png)" -eq 200
           test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8080/does-not-exist)" -eq 404
 
+      - name: Run read-only smoke test (analytics-api)
+        if: matrix.name == 'analytics-api'
+        run: |
+          docker run --rm -d --name rel-analytics \
+            --read-only \
+            --cap-drop=ALL \
+            --security-opt=no-new-privileges:true \
+            -p 127.0.0.1:8080:8080 \
+            analytics-api:release-check
+          trap 'docker rm -f rel-analytics || true' EXIT
+          for i in $(seq 1 15); do curl -fsS http://127.0.0.1:8080/healthz | grep -qx "ok" && break; sleep 1; done
+          test "$(curl -s -o /dev/null -w '%{http_code}' -X POST \
+            -H 'Content-Type: application/json' \
+            -A 'Mozilla/5.0 (Linux)' \
+            -d '{"event_type":"page_view","page_path":"/"}' \
+            http://127.0.0.1:8080/api/v1/events)" -eq 202
+
       - name: Trivy vulnerability gate (SARIF + fail on HIGH/CRITICAL)
-        uses: aquasecurity/trivy-action@0.30.0
+        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # 0.35.0
         with:
-          image-ref: portfolio:release-check
+          image-ref: ${{ matrix.name }}:release-check
           format: sarif
-          output: trivy-image-results.sarif
+          output: trivy-${{ matrix.name }}.sarif
           exit-code: "1"
           ignore-unfixed: true
           severity: HIGH,CRITICAL
 
       - name: Upload Trivy SARIF to GitHub Security
-        if: always() && hashFiles('trivy-image-results.sarif') != ''
-        uses: github/codeql-action/upload-sarif@v3
+        if: always() && hashFiles(format('trivy-{0}.sarif', matrix.name)) != ''
+        uses: github/codeql-action/upload-sarif@74c1aea9df7c0f02e9b7bfe4a8935abf2e5e3aa6 # v3
         with:
-          sarif_file: trivy-image-results.sarif
+          sarif_file: trivy-${{ matrix.name }}.sarif
+          category: trivy-${{ matrix.name }}
 
       - name: Authenticate to Google Cloud via Workload Identity Federation
         id: gcp-auth
-        uses: google-github-actions/auth@v2
+        uses: google-github-actions/auth@c200f3691d83b41bf9bbd8638997a462592937ed # v2
         with:
           workload_identity_provider: ${{ vars.GCP_WIF_PROVIDER }}
           service_account: ${{ vars.GCP_CI_SERVICE_ACCOUNT }}
           token_format: access_token
 
       - name: Login to Artifact Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
         with:
           registry: ${{ env.GAR_LOCATION }}-docker.pkg.dev
           username: oauth2accesstoken
@@ -133,84 +228,120 @@ jobs:
 
       - name: Push immutable container image to Artifact Registry
         id: push
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
         with:
-          context: .
-          file: deploy/docker/Dockerfile
+          context: ${{ matrix.context }}
+          file: ${{ matrix.dockerfile }}
           push: true
           tags: ${{ steps.meta.outputs.repo_uri }}:${{ steps.meta.outputs.tag }}
           labels: |
             org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.created=${{ github.event.head_commit.timestamp }}
-          cache-from: type=gha
+          cache-from: type=gha,scope=${{ matrix.name }}
 
       - name: Generate SPDX SBOM with Syft
-        uses: anchore/sbom-action@v0
+        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0
         with:
           image: ${{ steps.meta.outputs.repo_uri }}@${{ steps.push.outputs.digest }}
           format: spdx-json
-          output-file: sbom.spdx.json
+          output-file: sbom-${{ matrix.name }}.spdx.json
 
       - name: Upload SBOM artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: sbom-${{ steps.meta.outputs.tag }}
-          path: sbom.spdx.json
+          name: sbom-${{ matrix.name }}-${{ steps.meta.outputs.tag }}
+          path: sbom-${{ matrix.name }}.spdx.json
           retention-days: 90
 
       - name: Install Cosign
-        uses: sigstore/cosign-installer@v3
+        uses: sigstore/cosign-installer@398d4b0eeef1380460a10c8013a76f728fb906ac # v3
 
       - name: Sign image & attest SBOM with Cosign keyless OIDC
         env:
           IMAGE_REF: ${{ steps.meta.outputs.repo_uri }}@${{ steps.push.outputs.digest }}
         run: |
           cosign sign --yes "${IMAGE_REF}"
-          cosign attest --yes --predicate sbom.spdx.json --type spdxjson "${IMAGE_REF}"
+          cosign attest --yes --predicate "sbom-${{ matrix.name }}.spdx.json" --type spdxjson "${IMAGE_REF}"
+
+      - name: Re-authenticate gcloud credentials for Binary Authorization attestation
+        if: vars.BINAUTHZ_ATTESTOR != '' && vars.BINAUTHZ_KMS_KEY_VERSION != ''
+        uses: google-github-actions/auth@c200f3691d83b41bf9bbd8638997a462592937ed # v2
+        with:
+          workload_identity_provider: ${{ vars.GCP_WIF_PROVIDER }}
+          service_account: ${{ vars.GCP_CI_SERVICE_ACCOUNT }}
+
+      - name: Setup gcloud for Binary Authorization
+        if: vars.BINAUTHZ_ATTESTOR != '' && vars.BINAUTHZ_KMS_KEY_VERSION != ''
+        uses: google-github-actions/setup-gcloud@e427ad8a34f8676edf47cf7d7925499adf3eb74f # v2
+
+      - name: Create Binary Authorization cryptographic attestation (Cloud KMS)
+        if: vars.BINAUTHZ_ATTESTOR != '' && vars.BINAUTHZ_KMS_KEY_VERSION != ''
+        env:
+          IMAGE_REF: ${{ steps.meta.outputs.repo_uri }}@${{ steps.push.outputs.digest }}
+          ATTESTOR: ${{ vars.BINAUTHZ_ATTESTOR }}
+          KMS_KEY_VERSION: ${{ vars.BINAUTHZ_KMS_KEY_VERSION }}
+          GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+        run: |
+          gcloud container binauthz attestations sign-and-create \
+            --project="${GCP_PROJECT_ID}" \
+            --artifact-url="${IMAGE_REF}" \
+            --attestor="${ATTESTOR}" \
+            --attestor-project="${GCP_PROJECT_ID}" \
+            --keyversion="${KMS_KEY_VERSION}"
 
       - name: Update GitOps production values with immutable @sha256 digest
+        if: matrix.gitops_values != ''
         env:
           IMAGE_REPO: ${{ steps.meta.outputs.repo_uri }}
           IMAGE_TAG: ${{ steps.meta.outputs.tag }}
           IMAGE_DIGEST: ${{ steps.push.outputs.digest }}
+          VALUES_FILE: ${{ matrix.gitops_values }}
         run: |
-          yq -i '.image.repository = strenv(IMAGE_REPO)' deploy/gitops/envs/prod/values-portfolio.yaml
-          yq -i '.image.tag = strenv(IMAGE_TAG)' deploy/gitops/envs/prod/values-portfolio.yaml
-          yq -i '.image.digest = strenv(IMAGE_DIGEST)' deploy/gitops/envs/prod/values-portfolio.yaml
+          yq -i '.image.repository = strenv(IMAGE_REPO)' "$VALUES_FILE"
+          yq -i '.image.tag = strenv(IMAGE_TAG)' "$VALUES_FILE"
+          yq -i '.image.digest = strenv(IMAGE_DIGEST)' "$VALUES_FILE"
 
-      - name: Validate updated Helm chart with promoted values
-        uses: azure/setup-helm@v4
+      - name: Setup Helm for promoted values lint
+        if: matrix.chart != ''
+        uses: azure/setup-helm@1a275c3b69536ee54be43f2070a358922e12c8d4 # v4
         with:
           version: v3.17.3
 
       - name: Helm lint promoted values
-        run: helm lint deploy/charts/portfolio -f deploy/gitops/envs/prod/values-portfolio.yaml
+        if: matrix.chart != ''
+        run: helm lint "${{ matrix.chart }}" -f "${{ matrix.gitops_values }}"
 
       - name: Open GitOps promotion Pull Request
-        uses: peter-evans/create-pull-request@v7
+        if: matrix.gitops_values != ''
+        uses: peter-evans/create-pull-request@22a9089034f40e5a961c8808d113e2c98fb63676 # v7
         with:
-          branch: gitops/promote-${{ steps.meta.outputs.short_sha }}
+          branch: gitops/promote-${{ matrix.name }}-${{ steps.meta.outputs.short_sha }}
           delete-branch: true
-          commit-message: "chore(gitops): promote portfolio ${{ steps.meta.outputs.tag }}"
-          title: "chore(gitops): promote portfolio ${{ steps.meta.outputs.tag }}"
+          commit-message: "chore(gitops): promote ${{ matrix.name }} ${{ steps.meta.outputs.tag }}"
+          title: "chore(gitops): promote ${{ matrix.name }} ${{ steps.meta.outputs.tag }}"
           body: |
-            Automated GitOps image promotion triggered by `${{ github.sha }}`.
+            Automated GitOps image promotion for **${{ matrix.name }}** triggered by `${{ github.sha }}`.
 
             ### Release Artifact
             - **Image**: `${{ steps.meta.outputs.repo_uri }}@${{ steps.push.outputs.digest }}`
             - **Tag**: `${{ steps.meta.outputs.tag }}`
             - **Trivy Scan**: Passed (`HIGH,CRITICAL`, unfixed ignored)
             - **Cosign Signature & SPDX SBOM Attestation**: Published to Sigstore Rekor
+            - **Binary Authorization Attestation**: Signed via Cloud KMS (when configured)
 
-            ### Verify Signature Locally
-            ```bash
-            cosign verify \
-              --certificate-identity-regexp="^https://github.com/${{ github.repository }}/.github/workflows/release.yaml@refs/heads/main$" \
-              --certificate-oidc-issuer="https://token.actions.githubusercontent.com" \
-              "${{ steps.meta.outputs.repo_uri }}@${{ steps.push.outputs.digest }}"
-            ```
-
-            Merging this PR updates `deploy/gitops/envs/prod/values-portfolio.yaml` and triggers Argo CD reconciliation on GKE Autopilot.
+            Merging this PR updates `${{ matrix.gitops_values }}` and triggers Argo CD reconciliation on GKE Autopilot.
           labels: |
             gitops
             automated-promotion
+
+      - name: Print Cloud Run Job image reference (digest-job)
+        if: matrix.name == 'digest-job'
+        run: |
+          {
+            echo "### Published digest-job Image"
+            echo ""
+            echo "Update \`digest_job_image\` in \`infra/terraform/environments/prod/terraform.tfvars\`:"
+            echo '```hcl'
+            echo "digest_job_image = \"${{ steps.meta.outputs.repo_uri }}@${{ steps.push.outputs.digest }}\""
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"

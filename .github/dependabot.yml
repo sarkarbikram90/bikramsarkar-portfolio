@@ -54,3 +54,25 @@ updates:
       - docker
     commit-message:
       prefix: "chore(docker)"
+
+  - package-ecosystem: gomod
+    directory: "/services/digest-job"
+    schedule:
+      interval: weekly
+      day: monday
+    labels:
+      - dependencies
+      - go
+    commit-message:
+      prefix: "chore(digest-job)"
+
+  - package-ecosystem: docker
+    directory: "/services/digest-job"
+    schedule:
+      interval: weekly
+      day: monday
+    labels:
+      - dependencies
+      - docker
+    commit-message:
+      prefix: "chore(docker)"
