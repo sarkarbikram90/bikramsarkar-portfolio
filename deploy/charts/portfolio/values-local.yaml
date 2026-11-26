@@ -1,0 +1,24 @@
+# Local overrides for kind / Docker Desktop Kubernetes testing
+
+replicaCount: 1
+
+image:
+  repository: portfolio
+  tag: local
+  digest: ""
+  pullPolicy: IfNotPresent
+
+podDisruptionBudget:
+  enabled: false
+
+topologySpreadConstraints:
+  enabled: false
+
+networkPolicy:
+  enabled: false
+
+gateway:
+  enabled: false
+
+healthCheckPolicy:
+  enabled: false

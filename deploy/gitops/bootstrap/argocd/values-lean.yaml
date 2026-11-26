@@ -1,0 +1,84 @@
+# Official argo/argo-cd Helm chart values tuned LEAN for GKE Autopilot (us-central1).
+# Total requested footprint: ~350m vCPU / 512Mi RAM (~$12-$15/mo on Autopilot)
+# vs ~1.5-2.0 vCPU / 3-4Gi RAM (~$45+/mo) for default Argo CD installs.
+
+global:
+  logging:
+    format: json
+    level: info
+
+# Disable optional components to minimize Autopilot pod count & cost
+dex:
+  enabled: false
+
+notifications:
+  enabled: false
+
+applicationSet:
+  enabled: false
+
+redis-ha:
+  enabled: false
+
+configs:
+  params:
+    # Keep TLS enabled; access UI locally via `kubectl port-forward svc/argocd-server -n argocd 8443:443`
+    server.insecure: false
+    # Reduce default reconciliation churn for a small platform
+    timeout.reconciliation: 180s
+  rbac:
+    policy.default: role:readonly
+  cm:
+    statusbadge.enabled: "false"
+    exec.enabled: "false"
+
+# Every pod is sized to Autopilot burstable 1:1–1:6.5 vCPU:GiB ratios
+# so Autopilot does not mutate requests upward to default 500m/2Gi.
+controller:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 150m
+      memory: 256Mi
+      ephemeral-storage: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+      ephemeral-storage: 256Mi
+
+repoServer:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+      ephemeral-storage: 256Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+      ephemeral-storage: 512Mi
+
+server:
+  replicas: 1
+  service:
+    type: ClusterIP
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+      ephemeral-storage: 64Mi
+    limits:
+      cpu: 250m
+      memory: 128Mi
+      ephemeral-storage: 128Mi
+
+redis:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+      ephemeral-storage: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+      ephemeral-storage: 128Mi

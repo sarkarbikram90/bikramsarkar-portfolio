@@ -1,0 +1,82 @@
+replicaCount: 2
+
+image:
+  repository: us-central1-docker.pkg.dev/PROJECT_ID/portfolio-images/analytics-api
+  digest: ""
+  tag: ""
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: "analytics-api"
+
+serviceAccount:
+  create: true
+  # Workload Identity uses projected token volumes; keep Kubernetes API automount disabled
+  automount: false
+  name: "analytics-api"
+  # Set to `terraform output -raw analytics_workload_sa_email` in prod GitOps values
+  gcpServiceAccountEmail: ""
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 65532
+  runAsGroup: 65532
+  fsGroup: 65532
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 65532
+  runAsGroup: 65532
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+
+# Autopilot burstable 1:1.28 ratio (50m CPU / 64Mi RAM)
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+    ephemeral-storage: 64Mi
+  limits:
+    cpu: 250m
+    memory: 128Mi
+    ephemeral-storage: 128Mi
+
+containerPort: 8080
+
+service:
+  type: ClusterIP
+  port: 80
+
+config:
+  gcpProjectId: ""
+  pubsubTopicId: "portfolio-visitor-events"
+  # In-cluster Managed OpenTelemetry for GKE OTLP gRPC endpoint (leave empty to disable export)
+  otlpEndpoint: ""
+  otlpInsecure: "true"
+  rateLimitPerMinute: "30"
+  rateLimitBurst: "10"
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+
+healthCheckPolicy:
+  enabled: true
+  checkIntervalSec: 15
+  timeoutSec: 5
+  healthyThreshold: 1
+  unhealthyThreshold: 2
+  requestPath: /healthz
+  port: 8080
+  logEnabled: true
+
+networkPolicy:
+  enabled: true
+  ingressCidrs:
+    - 130.211.0.0/22
+    - 35.191.0.0/16

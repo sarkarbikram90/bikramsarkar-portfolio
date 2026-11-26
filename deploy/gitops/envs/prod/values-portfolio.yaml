@@ -1,0 +1,49 @@
+# Production GitOps values for bikramsarkar.space (GKE Autopilot us-central1).
+# Phase 3 CI updates `image.digest` via Pull Request after signing & scanning.
+
+replicaCount: 2
+
+image:
+  # Replace PROJECT_ID with your actual GCP project ID after Terraform bootstrap
+  repository: us-central1-docker.pkg.dev/PROJECT_ID/portfolio-images/portfolio
+  # Populated automatically by CI release workflow with immutable sha256 digest:
+  # digest: "sha256:..."
+  digest: ""
+  tag: "1.0.0"
+  pullPolicy: IfNotPresent
+
+gateway:
+  enabled: true
+  name: portfolio-gateway
+  gatewayClassName: gke-l7-global-external-managed
+  staticIpName: portfolio-ip
+  certMapName: portfolio-cert-map
+  hostnames:
+    - bikramsarkar.space
+  redirectHttpToHttps: true
+  apiRoute:
+    enabled: true
+    pathPrefix: /api
+    serviceName: analytics-api
+    servicePort: 80
+
+healthCheckPolicy:
+  enabled: true
+  requestPath: /healthz
+  port: 8080
+  logEnabled: true
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+
+networkPolicy:
+  enabled: true
+  allowEgress: false
+
+# Phase 4: Nginx Prometheus exporter sidecar + GMP PodMonitoring
+# Combined pod requests: 75m CPU / 96Mi RAM (1:1.28 Autopilot burstable ratio)
+metrics:
+  exporter:
+    enabled: true
+    scrapeInterval: 30s

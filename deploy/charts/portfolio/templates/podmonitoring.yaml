@@ -1,0 +1,20 @@
+{{- if .Values.metrics.exporter.enabled }}
+apiVersion: monitoring.googleapis.com/v1
+kind: PodMonitoring
+metadata:
+  name: {{ include "portfolio.fullname" . }}
+  labels:
+    {{- include "portfolio.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "portfolio.selectorLabels" . | nindent 6 }}
+  endpoints:
+    - port: metrics
+      interval: {{ .Values.metrics.exporter.scrapeInterval }}
+      metricRelabeling:
+        # Keep only Nginx & scrape health metrics to minimize GMP ingestion cost
+        - sourceLabels: [__name__]
+          regex: "(nginx_.*|up)"
+          action: keep
+{{- end }}

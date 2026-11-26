@@ -1,0 +1,46 @@
+name: Terraform Checks
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "infra/terraform/**"
+
+permissions: {}
+
+concurrency:
+  group: terraform-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  terraform-checks:
+    name: Format, Validate & Trivy IaC Scan
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.11.4
+
+      - name: Check Terraform formatting
+        run: terraform fmt -check -recursive -diff infra/terraform
+
+      - name: Init (backend disabled) & validate prod
+        working-directory: infra/terraform/environments/prod
+        run: |
+          terraform init -backend=false -input=false
+          terraform validate
+
+      - name: Trivy Terraform security scan
+        uses: aquasecurity/trivy-action@0.30.0
+        with:
+          scan-type: config
+          scan-ref: infra/terraform
+          exit-code: "1"
+          severity: MEDIUM,HIGH,CRITICAL
+          trivy-config: trivy.yaml

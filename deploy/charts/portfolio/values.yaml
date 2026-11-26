@@ -1,0 +1,153 @@
+# Default values tuned for GKE Autopilot (us-central1)
+
+replicaCount: 2
+
+image:
+  repository: us-central1-docker.pkg.dev/PROJECT_ID/portfolio-images/portfolio
+  # Prefer immutable digest in production (set via GitOps promotion):
+  # digest: "sha256:..."
+  digest: ""
+  tag: ""
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  automount: false
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 10101
+  runAsGroup: 10101
+  fsGroup: 10101
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 10101
+  runAsGroup: 10101
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+
+# Sized for GKE Autopilot burstable workloads (allowed vCPU:GiB ratio 1:1 to 1:6.5)
+# 50m CPU : 64Mi RAM = 1:1.28 — avoids Autopilot admission mutation & Argo CD OutOfSync drift.
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+    ephemeral-storage: 64Mi
+  limits:
+    cpu: 250m
+    memory: 128Mi
+    ephemeral-storage: 128Mi
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: http
+
+containerPort: 8080
+
+probes:
+  path: /healthz
+  startup:
+    periodSeconds: 5
+    timeoutSeconds: 2
+    failureThreshold: 12
+  readiness:
+    periodSeconds: 10
+    timeoutSeconds: 2
+    failureThreshold: 3
+  liveness:
+    periodSeconds: 20
+    timeoutSeconds: 2
+    failureThreshold: 3
+
+strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxSurge: 1
+    maxUnavailable: 0
+
+terminationGracePeriodSeconds: 15
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+
+autoscaling:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 75
+
+topologySpreadConstraints:
+  enabled: true
+
+networkPolicy:
+  enabled: true
+  # Google Front End / Cloud Load Balancing health-check and proxy IP ranges
+  # for gke-l7-global-external-managed (container-native NEG).
+  ingressCidrs:
+    - 130.211.0.0/22
+    - 35.191.0.0/16
+  # Static Nginx needs zero outbound internet/cluster egress.
+  allowEgress: false
+
+gateway:
+  enabled: true
+  name: portfolio-gateway
+  gatewayClassName: gke-l7-global-external-managed
+  staticIpName: portfolio-ip
+  certMapName: portfolio-cert-map
+  hostnames:
+    - bikramsarkar.space
+  redirectHttpToHttps: true
+  # Phase 5 hook: route /api/* on the same origin to the Go analytics service
+  apiRoute:
+    enabled: false
+    pathPrefix: /api
+    serviceName: analytics-api
+    servicePort: 80
+
+healthCheckPolicy:
+  enabled: true
+  checkIntervalSec: 15
+  timeoutSec: 5
+  healthyThreshold: 1
+  unhealthyThreshold: 2
+  requestPath: /healthz
+  port: 8080
+  logEnabled: true
+
+# Phase 4 hook: Nginx Prometheus exporter + Google Managed Prometheus PodMonitoring
+metrics:
+  exporter:
+    enabled: false
+    image:
+      repository: nginx/nginx-prometheus-exporter
+      tag: "1.4.1"
+      pullPolicy: IfNotPresent
+    port: 9113
+    scrapeInterval: 30s
+    resources:
+      requests:
+        cpu: 25m
+        memory: 32Mi
+        ephemeral-storage: 32Mi
+      limits:
+        cpu: 100m
+        memory: 64Mi
+        ephemeral-storage: 64Mi

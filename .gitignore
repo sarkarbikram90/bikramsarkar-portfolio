@@ -1,1 +1,24 @@
-empty
+# OS & editor files
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Terraform local state & caches
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+crash.log
+
+# Helm / local artifacts
+*.tgz
+.kube/
+
+# Secrets & env files
+.env
+.env.*
+*.pem
+*.key

@@ -1,0 +1,26 @@
+# Copy to terraform.tfvars (gitignored) and fill in your GCP details.
+
+project_id = "your-gcp-project-id"
+region     = "us-central1"
+domain     = "bikramsarkar.space"
+
+github_repository = "sarkarbikram90/bikramsarkar-portfolio"
+
+# Restrict kubectl access to your current IP (run: curl -s https://ifconfig.me)
+master_authorized_cidrs = [
+  {
+    cidr_block   = "203.0.113.10/32"
+    display_name = "workstation"
+  }
+]
+
+# Optional: set your Billing Account ID (012345-6789AB-CDEF01) to provision a $60/mo alert budget
+billing_account_id = ""
+monthly_budget_usd = 60
+
+# Optional: Cloud Monitoring alert channels (email and/or webhook)
+alert_email       = ""
+alert_webhook_url = ""
+
+# Set to false temporarily only if you intentionally want to run `terraform destroy`
+deletion_protection = true

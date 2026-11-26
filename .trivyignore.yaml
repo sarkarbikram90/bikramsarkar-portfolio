@@ -1,0 +1,14 @@
+# Trivy ignore list with explicit security justifications
+misconfigurations:
+  - id: KSV-0125
+    statement: "App images are hosted in private Google Artifact Registry (us-central1-docker.pkg.dev) enforced via WIF + Cosign; metrics sidecar uses pinned official nginx/nginx-prometheus-exporter."
+    paths:
+      - "charts/portfolio/templates/deployment.yaml"
+      - "charts/analytics-api/templates/deployment.yaml"
+      - "templates/deployment.yaml"
+  - id: KSV-0110
+    statement: "Helm chart templates intentionally omit hardcoded metadata.namespace so Argo CD / helm install controls target namespace (portfolio)."
+    paths:
+      - "charts/portfolio/templates/deployment.yaml"
+      - "charts/analytics-api/templates/deployment.yaml"
+      - "templates/deployment.yaml"

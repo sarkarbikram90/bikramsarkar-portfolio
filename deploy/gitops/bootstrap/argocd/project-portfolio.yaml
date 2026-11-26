@@ -1,0 +1,39 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: portfolio
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  description: Least-privilege GitOps project for PortfolioOps workloads
+  sourceRepos:
+    - https://github.com/sarkarbikram90/bikramsarkar-portfolio.git
+  destinations:
+    - namespace: portfolio
+      server: https://kubernetes.default.svc
+  # Explicit least-privilege allowlists (no cluster-wide RBAC/CRD mutations)
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace
+  namespaceResourceWhitelist:
+    - group: ""
+      kind: Service
+    - group: ""
+      kind: ServiceAccount
+    - group: apps
+      kind: Deployment
+    - group: policy
+      kind: PodDisruptionBudget
+    - group: autoscaling
+      kind: HorizontalPodAutoscaler
+    - group: networking.k8s.io
+      kind: NetworkPolicy
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+    - group: networking.gke.io
+      kind: HealthCheckPolicy
+    - group: monitoring.googleapis.com
+      kind: PodMonitoring

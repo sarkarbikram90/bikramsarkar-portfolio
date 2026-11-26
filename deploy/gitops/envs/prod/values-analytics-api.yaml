@@ -1,0 +1,25 @@
+# Production GitOps values for Go analytics-api (GKE Autopilot us-central1)
+
+replicaCount: 2
+
+image:
+  # Replace PROJECT_ID with your GCP project ID after Terraform bootstrap
+  repository: us-central1-docker.pkg.dev/PROJECT_ID/portfolio-images/analytics-api
+  digest: ""
+  tag: "1.0.0"
+  pullPolicy: IfNotPresent
+
+serviceAccount:
+  create: true
+  name: "analytics-api"
+  # Replace with `terraform output -raw analytics_workload_sa_email`
+  gcpServiceAccountEmail: "analytics-api-sa@PROJECT_ID.iam.gserviceaccount.com"
+
+config:
+  gcpProjectId: "PROJECT_ID"
+  pubsubTopicId: "portfolio-visitor-events"
+  # Point to Managed OpenTelemetry for GKE OTLP collector once enabled
+  otlpEndpoint: ""
+  otlpInsecure: "true"
+  rateLimitPerMinute: "30"
+  rateLimitBurst: "10"

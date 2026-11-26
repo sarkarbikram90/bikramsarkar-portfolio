@@ -1,0 +1,39 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: portfolio
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: portfolio
+  # Multi-source pattern avoids unsafe '../' path traversal while keeping
+  # chart + prod values cleanly separated in one repository.
+  sources:
+    - repoURL: https://github.com/sarkarbikram90/bikramsarkar-portfolio.git
+      targetRevision: main
+      path: deploy/charts/portfolio
+      helm:
+        releaseName: portfolio
+        valueFiles:
+          - $values/deploy/gitops/envs/prod/values-portfolio.yaml
+    - repoURL: https://github.com/sarkarbikram90/bikramsarkar-portfolio.git
+      targetRevision: main
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: portfolio
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+      - PruneLast=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m

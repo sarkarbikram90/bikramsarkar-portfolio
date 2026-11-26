@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: analytics-api
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: portfolio
+  sources:
+    - repoURL: https://github.com/sarkarbikram90/bikramsarkar-portfolio.git
+      targetRevision: main
+      path: deploy/charts/analytics-api
+      helm:
+        releaseName: analytics-api
+        valueFiles:
+          - $values/deploy/gitops/envs/prod/values-analytics-api.yaml
+    - repoURL: https://github.com/sarkarbikram90/bikramsarkar-portfolio.git
+      targetRevision: main
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: portfolio
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+      - PruneLast=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m

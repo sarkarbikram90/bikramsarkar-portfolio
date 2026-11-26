@@ -1,0 +1,6 @@
+apiVersion: v2
+name: analytics-api
+description: Privacy-first OpenTelemetry-instrumented Go visitor analytics service for PortfolioOps
+type: application
+version: 0.1.0
+appVersion: "1.0.0"

@@ -1,0 +1,13 @@
+PortfolioOps release {{ .Release.Name }} installed in namespace {{ .Release.Namespace }}.
+
+1. Check rollout status:
+   kubectl rollout status deployment/{{ include "portfolio.fullname" . }} -n {{ .Release.Namespace }}
+
+2. Local port-forward test:
+   kubectl port-forward svc/{{ include "portfolio.fullname" . }} 8080:{{ .Values.service.port }} -n {{ .Release.Namespace }}
+   curl -i http://localhost:8080/healthz
+{{- if .Values.gateway.enabled }}
+
+3. Verify GKE Gateway & HTTPRoutes:
+   kubectl get gateway,httproute,healthcheckpolicy -n {{ .Release.Namespace }}
+{{- end }}

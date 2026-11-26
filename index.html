@@ -2454,6 +2454,25 @@
         }
       });
     });
+
+    // Privacy-first same-origin visitor analytics beacon (zero cookies, graceful no-op on GitHub Pages)
+    (function () {
+      if (typeof navigator.sendBeacon !== 'function') return;
+      const sendEvent = (eventType, pagePath) => {
+        try {
+          const payload = JSON.stringify({
+            event_type: eventType,
+            page_path: pagePath || window.location.pathname || '/',
+            referrer: document.referrer || ''
+          });
+          navigator.sendBeacon('/api/v1/events', new Blob([payload], { type: 'application/json' }));
+        } catch (_) {}
+      };
+      sendEvent('page_view');
+      document.querySelectorAll('a[href$=".pdf"]').forEach(link => {
+        link.addEventListener('click', () => sendEvent('resume_download', '/Bikram_Sarkar_DevOps_SRE_Resume.pdf'));
+      });
+    })();
   </script>
 
 </body>

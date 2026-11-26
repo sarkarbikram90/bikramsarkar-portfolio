@@ -1,0 +1,25 @@
+{{- if .Values.healthCheckPolicy.enabled }}
+apiVersion: networking.gke.io/v1
+kind: HealthCheckPolicy
+metadata:
+  name: {{ include "analytics-api.fullname" . }}
+  labels:
+    {{- include "analytics-api.labels" . | nindent 4 }}
+spec:
+  default:
+    checkIntervalSec: {{ .Values.healthCheckPolicy.checkIntervalSec }}
+    timeoutSec: {{ .Values.healthCheckPolicy.timeoutSec }}
+    healthyThreshold: {{ .Values.healthCheckPolicy.healthyThreshold }}
+    unhealthyThreshold: {{ .Values.healthCheckPolicy.unhealthyThreshold }}
+    logConfig:
+      enabled: {{ .Values.healthCheckPolicy.logEnabled }}
+    config:
+      type: HTTP
+      httpHealthCheck:
+        port: {{ .Values.healthCheckPolicy.port }}
+        requestPath: {{ .Values.healthCheckPolicy.requestPath | quote }}
+  targetRef:
+    group: ""
+    kind: Service
+    name: {{ include "analytics-api.fullname" . }}
+{{- end }}

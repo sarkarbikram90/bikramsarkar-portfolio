@@ -1,0 +1,20 @@
+# Version control & CI
+.git
+.github
+.gitignore
+
+# Documentation & GitHub Pages metadata
+README.md
+LICENSE
+CNAME
+docs/
+
+# Deployment, IaC, and future services (not needed in static Nginx image)
+deploy/
+infra/
+services/
+
+# Local / OS artifacts
+.DS_Store
+Thumbs.db
+*.log
