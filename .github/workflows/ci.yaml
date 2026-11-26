@@ -116,7 +116,7 @@ jobs:
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Scan deploy/ (Dockerfile, Helm, Argo CD)
-        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # 0.35.0
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # 0.36.0
         with:
           scan-type: config
           scan-ref: deploy
@@ -125,7 +125,7 @@ jobs:
           trivy-config: trivy.yaml
 
       - name: Scan services/ Dockerfiles
-        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # 0.35.0
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # 0.36.0
         with:
           scan-type: config
           scan-ref: services
@@ -226,7 +226,7 @@ jobs:
             http://127.0.0.1:8081/api/v1/events)" -eq 202
 
       - name: Trivy scan portfolio image
-        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # 0.35.0
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # 0.36.0
         with:
           image-ref: portfolio:ci
           format: table
@@ -235,7 +235,7 @@ jobs:
           severity: HIGH,CRITICAL
 
       - name: Trivy scan analytics-api image
-        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # 0.35.0
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # 0.36.0
         with:
           image-ref: analytics-api:ci
           format: table
