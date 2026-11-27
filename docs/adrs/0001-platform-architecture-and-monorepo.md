@@ -38,7 +38,7 @@ At the same time, this is a personal engineering showcase, so monthly cloud spen
 - **Exit Strategy**: Extracting `deploy/gitops/` or `infra/terraform/` into separate repositories later requires moving the folder and updating one Argo CD `repoURL` — zero Helm chart or application changes.
 
 ### 3. Hardened Non-Root Nginx Container
-- **Choice**: Base on `nginxinc/nginx-unprivileged:1.28-alpine` running as UID/GID `10101` (`> 10000` to avoid host UID overlap), overriding `ENTRYPOINT ["nginx"]` so `/docker-entrypoint.sh` never attempts filesystem writes under `readOnlyRootFilesystem: true`.
+- **Choice**: Base on `nginxinc/nginx-unprivileged:1.31-alpine-slim` running as UID/GID `10101` (`> 10000` to avoid host UID overlap), overriding `ENTRYPOINT ["nginx"]` so `/docker-entrypoint.sh` never attempts filesystem writes under `readOnlyRootFilesystem: true`.
 - **Rationale**:
   - All Nginx temp paths and PID files are directed to `/tmp` (`emptyDir` capped at `16Mi`).
   - Structured JSON access logs write to `/dev/stdout` matching Google Cloud Logging `httpRequest` fields.
