@@ -1,5 +1,7 @@
 # PortfolioOps — bikramsarkar.space on GKE
 
+[![CI & Security Checks](https://github.com/sarkarbikram90/bikramsarkar-portfolio/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/sarkarbikram90/bikramsarkar-portfolio/actions/workflows/ci.yaml)
+
 A production-grade Platform Engineering & SRE reference implementation hosting [bikramsarkar.space](https://bikramsarkar.space) on **Google Kubernetes Engine (GKE Autopilot, `us-central1`)** with GitOps, Helm, OpenTelemetry, supply-chain security, SLO-driven alerting, and privacy-first visitor analytics.
 
 ## System Architecture

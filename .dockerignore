@@ -9,10 +9,16 @@ LICENSE
 CNAME
 docs/
 
-# Deployment, IaC, and future services (not needed in static Nginx image)
-deploy/
+# Exclude IaC, charts, GitOps, and Go services (keep deploy/docker/nginx/ for Dockerfile COPY)
+deploy/charts/
+deploy/gitops/
+deploy/docker/Dockerfile
 infra/
 services/
+
+# Security tool config
+trivy.yaml
+.trivyignore.yaml
 
 # Local / OS artifacts
 .DS_Store
