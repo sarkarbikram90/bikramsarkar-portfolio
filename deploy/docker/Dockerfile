@@ -7,6 +7,10 @@ LABEL org.opencontainers.image.title="Bikram Sarkar Portfolio" \
       org.opencontainers.image.url="https://bikramsarkar.space" \
       org.opencontainers.image.source="https://github.com/sarkarbikram90/bikramsarkar-portfolio"
 
+# Apply upstream Alpine OS security patches at build time, then drop to non-root UID/GID 10101
+USER 0
+RUN apk upgrade --no-cache
+
 # Copy hardened Nginx configuration
 COPY --chown=10101:10101 deploy/docker/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY --chown=10101:10101 deploy/docker/nginx/security-headers.conf /etc/nginx/snippets/security-headers.conf
