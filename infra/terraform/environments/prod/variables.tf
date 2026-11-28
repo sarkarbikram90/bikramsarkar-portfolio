@@ -97,9 +97,8 @@ variable "digest_job_image" {
   default     = ""
 }
 
-variable "digest_webhook_url" {
-  type        = string
-  description = "Optional Google Chat / Slack webhook URL for the daily visitor digest."
-  default     = ""
-  sensitive   = true
+variable "enable_digest_webhook_secret" {
+  type        = bool
+  description = "Mount the Secret Manager digest webhook secret via secret_key_ref after populating version 1 via gcloud."
+  default     = false
 }

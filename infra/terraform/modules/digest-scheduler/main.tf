@@ -30,6 +30,28 @@ resource "google_service_account" "scheduler_invoker" {
 }
 
 # ------------------------------------------------------------------------------
+# Secret Manager Shell for Webhook URL (zero plaintext in tfvars, state, or specs)
+# Populate out-of-band with:
+#   printf '%s' '<WEBHOOK_URL>' | gcloud secrets versions add portfolio-digest-webhook-url --data-file=-
+# ------------------------------------------------------------------------------
+resource "google_secret_manager_secret" "digest_webhook" {
+  project   = var.project_id
+  secret_id = var.webhook_secret_id
+  labels    = var.labels
+
+  replication {
+    auto {}
+  }
+}
+
+resource "google_secret_manager_secret_iam_member" "digest_secret_accessor" {
+  project   = var.project_id
+  secret_id = google_secret_manager_secret.digest_webhook.secret_id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:${google_service_account.digest_job.email}"
+}
+
+# ------------------------------------------------------------------------------
 # Cloud Run v2 Job & Daily Cloud Scheduler Trigger (zero always-on GKE pods)
 # Created once `digest_image` is populated after the first CI image publish.
 # ------------------------------------------------------------------------------
@@ -70,13 +92,24 @@ resource "google_cloud_run_v2_job" "daily_digest" {
           name  = "BQ_TABLE_ID"
           value = var.bigquery_table_id
         }
-        env {
-          name  = "DIGEST_WEBHOOK_URL"
-          value = var.digest_webhook_url
+
+        dynamic "env" {
+          for_each = var.enable_webhook_secret ? [1] : []
+          content {
+            name = "DIGEST_WEBHOOK_URL"
+            value_source {
+              secret_key_ref {
+                secret  = google_secret_manager_secret.digest_webhook.secret_id
+                version = var.webhook_secret_version
+              }
+            }
+          }
         }
       }
     }
   }
+
+  depends_on = [google_secret_manager_secret_iam_member.digest_secret_accessor]
 }
 
 resource "google_cloud_run_v2_job_iam_member" "scheduler_run_invoker" {

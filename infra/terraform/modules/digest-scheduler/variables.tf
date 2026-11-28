@@ -27,11 +27,22 @@ variable "digest_image" {
   default     = ""
 }
 
-variable "digest_webhook_url" {
+variable "webhook_secret_id" {
   type        = string
-  description = "Optional Google Chat / Slack webhook URL for daily visitor digest delivery."
-  default     = ""
-  sensitive   = true
+  description = "Secret Manager secret ID storing the daily digest webhook URL."
+  default     = "portfolio-digest-webhook-url"
+}
+
+variable "enable_webhook_secret" {
+  type        = bool
+  description = "Attach the Secret Manager secret_key_ref to Cloud Run Job after populating version 1 via gcloud."
+  default     = false
+}
+
+variable "webhook_secret_version" {
+  type        = string
+  description = "Secret Manager version to mount into DIGEST_WEBHOOK_URL."
+  default     = "latest"
 }
 
 variable "schedule_cron" {

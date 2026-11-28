@@ -82,3 +82,8 @@ output "digest_job_name" {
   description = "Cloud Run v2 daily visitor digest job name (null until digest_job_image is set)."
   value       = module.digest_scheduler.digest_job_name
 }
+
+output "digest_webhook_secret_command" {
+  description = "Command to add the webhook URL directly to Secret Manager (never stored in Terraform state)."
+  value       = module.digest_scheduler.add_webhook_secret_command
+}

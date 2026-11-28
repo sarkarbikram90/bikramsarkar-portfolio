@@ -17,6 +17,7 @@ locals {
     "monitoring.googleapis.com",
     "pubsub.googleapis.com",
     "run.googleapis.com",
+    "secretmanager.googleapis.com",
     "telemetry.googleapis.com",
   ])
 
@@ -160,13 +161,13 @@ module "binary_authorization" {
 module "digest_scheduler" {
   source = "../../modules/digest-scheduler"
 
-  project_id          = var.project_id
-  region              = var.region
-  bigquery_dataset_id = "portfolio_analytics"
-  bigquery_table_id   = "visitor_events"
-  digest_image        = var.digest_job_image
-  digest_webhook_url  = var.digest_webhook_url
-  labels              = local.common_labels
+  project_id            = var.project_id
+  region                = var.region
+  bigquery_dataset_id   = "portfolio_analytics"
+  bigquery_table_id     = "visitor_events"
+  digest_image          = var.digest_job_image
+  enable_webhook_secret = var.enable_digest_webhook_secret
+  labels                = local.common_labels
 
   depends_on = [
     google_project_service.required,
